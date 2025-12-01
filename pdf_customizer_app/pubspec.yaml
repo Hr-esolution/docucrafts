@@ -1,0 +1,31 @@
+name: pdf_customizer_app
+description: A Flutter app for creating customizable PDF documents with GetX and offline MVC architecture.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get: ^4.6.6
+  pdf: ^3.10.8
+  path_provider: ^2.1.1
+  sqflite: ^2.3.0
+  permission_handler: ^11.0.1
+  image: ^4.0.17
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/fonts/
+    - assets/images/
