@@ -1,15 +1,23 @@
 ```
-# Flutter/Dart specific
+# Dart/Flutter build artifacts
 .dart_tool/
-.build/
-*.g.dart
-*.freezed.dart
+.packages
+*.dart.js
+*.js
+*.map
+build/
+*.a
+*.dll
+*.dylib
+*.so
+*.exe
+*.o
+*.obj
+*.out
 
 # Dependencies
-.pub/
-.venv/
-venv/
-node_modules/
+pubspec.lock
+.packages
 
 # Logs
 *.log
@@ -22,10 +30,11 @@ node_modules/
 !.env.example
 
 # IDE files
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
+*~
 
 # OS generated files
 .DS_Store
