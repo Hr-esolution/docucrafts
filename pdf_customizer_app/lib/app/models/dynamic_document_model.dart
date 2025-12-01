@@ -48,6 +48,7 @@ class DocumentField {
   final String value;
   final FieldType type;
   final bool isRequired;
+  final bool isEnabled;
 
   DocumentField({
     required this.id,
@@ -55,6 +56,7 @@ class DocumentField {
     required this.value,
     required this.type,
     this.isRequired = false,
+    this.isEnabled = true,
   });
 
   Map<String, dynamic> toMap() {
@@ -64,6 +66,7 @@ class DocumentField {
       'value': value,
       'type': type.toString(),
       'isRequired': isRequired ? 1 : 0,
+      'isEnabled': isEnabled ? 1 : 0,
     };
   }
 
@@ -74,6 +77,7 @@ class DocumentField {
       value: map['value'] ?? '',
       type: _getFieldTypeFromString(map['type'] ?? ''),
       isRequired: (map['isRequired'] == 1),
+      isEnabled: map['isEnabled'] == 1,
     );
   }
 

@@ -7,4 +7,5 @@ abstract class Routes {
   static const DELIVERY = '/delivery';
   static const BUSINESS_CARD = '/business_card';
   static const CV = '/cv';
+  static const SETTINGS = '/settings';
 }
