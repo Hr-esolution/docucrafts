@@ -13,6 +13,12 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('PDF Customizer'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Get.toNamed('/settings'),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

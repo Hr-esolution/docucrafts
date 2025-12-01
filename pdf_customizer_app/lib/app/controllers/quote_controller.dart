@@ -84,6 +84,22 @@ class QuoteController extends GetxController {
         value: newValue,
         type: fields[fieldIndex].type,
         isRequired: fields[fieldIndex].isRequired,
+        isEnabled: fields[fieldIndex].isEnabled,
+      );
+      update();
+    }
+  }
+
+  void toggleFieldEnablement(String fieldId) {
+    final fieldIndex = fields.indexWhere((field) => field.id == fieldId);
+    if (fieldIndex != -1) {
+      fields[fieldIndex] = DocumentField(
+        id: fields[fieldIndex].id,
+        label: fields[fieldIndex].label,
+        value: fields[fieldIndex].value,
+        type: fields[fieldIndex].type,
+        isRequired: fields[fieldIndex].isRequired,
+        isEnabled: !fields[fieldIndex].isEnabled,
       );
       update();
     }
