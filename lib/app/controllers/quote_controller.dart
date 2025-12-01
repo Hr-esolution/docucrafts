@@ -85,7 +85,7 @@ class QuoteController extends GetxController {
         type: fields[fieldIndex].type,
         isRequired: fields[fieldIndex].isRequired,
       );
-      update();
+      fields.refresh(); // Utilisation de refresh() pour s'assurer que l'observable est mis à jour
     }
   }
 
