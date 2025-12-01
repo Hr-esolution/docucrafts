@@ -14,6 +14,16 @@ class InvoiceFormPage extends StatelessWidget {
         title: const Text('Créer une Facture'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Get.toNamed('/settings');
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf),
+            onPressed: () => controller.generateInvoicePdf(),
+          ),
+          IconButton(
             icon: const Icon(Icons.save),
             onPressed: () => controller.saveInvoice(),
           ),
@@ -26,17 +36,36 @@ class InvoiceFormPage extends StatelessWidget {
             itemCount: controller.fields.length,
             itemBuilder: (context, index) {
               final field = controller.fields[index];
+              // Ne montrer que les champs activés
+              if (!field.isEnabled) {
+                return const SizedBox.shrink();
+              }
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      field.label,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          field.label,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        if (field.isRequired)
+                          const Padding(
+                            padding: EdgeInsets.only(left: 4.0),
+                            child: Text(
+                              '*',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     if (field.type == FieldType.date)
