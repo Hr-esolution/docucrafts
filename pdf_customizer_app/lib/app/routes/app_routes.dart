@@ -1,5 +1,7 @@
-class Routes {
-  static const HOME = '/home';
+part of '../routes/app_pages.dart';
+
+abstract class Routes {
+  static const HOME = '/';
   static const INVOICE = '/invoice';
   static const QUOTE = '/quote';
   static const DELIVERY = '/delivery';
