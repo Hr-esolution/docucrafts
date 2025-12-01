@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class DynamicDocumentModel {
   final String id;
   final String type;

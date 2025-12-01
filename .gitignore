@@ -2,40 +2,27 @@
 # Flutter/Dart specific
 .dart_tool/
 .packages
-flutter/
-build/
-*.iws
-*.sw?
-*~
-.DS_Store
+*.log
+*.tmp
 
 # Dependencies
-pubspec.lock
-
-# Logs
-*.log
-**/logs
-
-# Coverage
-coverage/
-
-# Temporary files
-*.tmp
-*.temp
+.pub/
+build/
+ios/.symlinks/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# IDE
+# Editor/IDE
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
+*.swp
+*.swo
 
 # OS generated files
 .DS_Store
 Thumbs.db
 ```
+flutter.tar.xz
