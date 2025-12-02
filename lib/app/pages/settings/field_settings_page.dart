@@ -6,6 +6,7 @@ import 'package:pdf_customizer_app/app/controllers/delivery_controller.dart';
 import 'package:pdf_customizer_app/app/controllers/invoice_controller.dart';
 import 'package:pdf_customizer_app/app/controllers/quote_controller.dart';
 import '../../models/dynamic_document_model.dart';
+import 'dart:ui';
 
 class FieldSettingsPage extends StatefulWidget {
   const FieldSettingsPage({super.key});
@@ -18,52 +19,68 @@ class _FieldSettingsPageState extends State<FieldSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Paramètres des Champs'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.black87,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDocumentTypeSection(
-                'Facture',
-                'invoice',
-                _getFields('invoice'),
-                _toggleFieldEnablement,
-              ),
-              const SizedBox(height: 20),
-              _buildDocumentTypeSection(
-                'Devis',
-                'quote',
-                _getFields('quote'),
-                _toggleFieldEnablement,
-              ),
-              const SizedBox(height: 20),
-              _buildDocumentTypeSection(
-                'Bon de Livraison',
-                'delivery',
-                _getFields('delivery'),
-                _toggleFieldEnablement,
-              ),
-              const SizedBox(height: 20),
-              _buildDocumentTypeSection(
-                'Carte de Visite',
-                'business_card',
-                _getFields('business_card'),
-                _toggleFieldEnablement,
-              ),
-              const SizedBox(height: 20),
-              _buildDocumentTypeSection(
-                'CV',
-                'cv',
-                _getFields('cv'),
-                _toggleFieldEnablement,
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.95),
+              Colors.blue.withOpacity(0.05),
+              Colors.indigo.withOpacity(0.03),
             ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 80),
+                _buildDocumentTypeSection(
+                  'Facture',
+                  'invoice',
+                  _getFields('invoice'),
+                  _toggleFieldEnablement,
+                ),
+                const SizedBox(height: 20),
+                _buildDocumentTypeSection(
+                  'Devis',
+                  'quote',
+                  _getFields('quote'),
+                  _toggleFieldEnablement,
+                ),
+                const SizedBox(height: 20),
+                _buildDocumentTypeSection(
+                  'Bon de Livraison',
+                  'delivery',
+                  _getFields('delivery'),
+                  _toggleFieldEnablement,
+                ),
+                const SizedBox(height: 20),
+                _buildDocumentTypeSection(
+                  'Carte de Visite',
+                  'business_card',
+                  _getFields('business_card'),
+                  _toggleFieldEnablement,
+                ),
+                const SizedBox(height: 20),
+                _buildDocumentTypeSection(
+                  'CV',
+                  'cv',
+                  _getFields('cv'),
+                  _toggleFieldEnablement,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -115,6 +132,8 @@ class _FieldSettingsPageState extends State<FieldSettingsPage> {
         controller.toggleFieldEnablement(fieldId);
         break;
     }
+    // Forcer la mise à jour UI
+    setState(() {});
   }
 
   Widget _buildDocumentTypeSection(
@@ -123,27 +142,63 @@ class _FieldSettingsPageState extends State<FieldSettingsPage> {
     List<DocumentField> fields,
     Function(String documentType, String fieldId) onToggle,
   ) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withOpacity(0.5),
+                Colors.white.withOpacity(0.1),
+              ],
             ),
-            const SizedBox(height: 10),
-            ...fields.map((field) => _buildFieldToggle(
-                  field,
-                  documentType,
-                  onToggle,
-                )),
-          ],
+            border: Border.all(
+              color: Colors.white.withOpacity(0.3),
+              width: 1.5,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.blue.withOpacity(0.2),
+                        Colors.indigo.withOpacity(0.1),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ...fields.map((field) => _buildFieldToggle(
+                      field,
+                      documentType,
+                      onToggle,
+                    )),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -154,13 +209,49 @@ class _FieldSettingsPageState extends State<FieldSettingsPage> {
     String documentType,
     Function(String documentType, String fieldId) onToggle,
   ) {
-    return ListTile(
-      title: Text(field.label),
-      trailing: Switch(
-        value: field.isEnabled,
-        onChanged: (value) {
-          onToggle(documentType, field.id);
-        },
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.white.withOpacity(0.4),
+                Colors.white.withOpacity(0.05),
+              ],
+            ),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListTile(
+            title: Text(
+              field.label,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+            trailing: Switch(
+              value: field.isEnabled,
+              onChanged: (value) {
+                onToggle(documentType, field.id);
+              },
+              activeColor: Colors.blue,
+              activeTrackColor: Colors.blue.withOpacity(0.3),
+              inactiveThumbColor: Colors.grey,
+              inactiveTrackColor: Colors.grey.withOpacity(0.2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+          ),
+        ),
       ),
     );
   }
