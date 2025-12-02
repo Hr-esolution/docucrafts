@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
+import 'package:pdf/pdf.dart' as pdf;
 
 Future<Uint8List> generateInvoicePdf({
   required String invoiceTitle,
@@ -99,7 +99,7 @@ Future<Uint8List> generateInvoicePdf({
             pw.Container(
               padding: const pw.EdgeInsets.all(10),
               decoration: pw.BoxDecoration(
-                border: pw.Border.all(color: PdfColors.grey400),
+                border: pw.Border.all(color: pdf.PdfColors.grey400),
                 borderRadius: pw.BorderRadius.circular(5),
               ),
               child: pw.Column(
@@ -143,7 +143,7 @@ Future<Uint8List> generateInvoicePdf({
                   ),
                   pw.SizedBox(height: 10),
                   pw.Table(
-                    border: pw.TableBorder.all(color: PdfColors.grey400),
+                    border: pw.TableBorder.all(color: pdf.PdfColors.grey400),
                     children: [
                       pw.TableRow(
                         children: [
@@ -240,7 +240,7 @@ Future<Uint8List> generateInvoicePdf({
             pw.Container(
               padding: const pw.EdgeInsets.all(10),
               decoration: pw.BoxDecoration(
-                border: pw.Border.all(color: PdfColors.grey400),
+                border: pw.Border.all(color: pdf.PdfColors.grey400),
                 borderRadius: pw.BorderRadius.circular(5),
               ),
               child: pw.Column(

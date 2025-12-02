@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart' as pdf;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {

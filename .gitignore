@@ -1,64 +1,59 @@
 ```
-# Flutter/Dart specific
+# Flutter/Dart
 .dart_tool/
 .build/
-.packages
-.pub-cache/
-.pub/
-flutter/
 packages/
+*.iws
+*.swo
+*.swp
+*~
+.DS_Store
+Thumbs.db
 
 # Dependencies
 node_modules/
 vendor/
 
-# Compiled and build artifacts
+# Logs
+*.log
+*.tmp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Build artifacts
+build/
+dist/
+target/
 *.o
 *.obj
 *.a
 *.lib
 *.so
-*.dylib
 *.dll
 *.exe
 *.out
 
-# Build outputs
-build/
-dist/
-target/
-bin/
-obj/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
-*.bak
-*.~*
-
-# Environment variables
-.env
-.env.local
-.env.*
-
-# Editor/IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-Thumbs.db
-.DS_Store
-
-# Testing and coverage
-coverage/
-htmlcov/
-*.coverage
+# Cache
+.cache/
+__pycache__/
+*.pyc
 .pytest_cache/
 .mypy_cache/
+.nyc_output/
+coverage/
+htmlcov/
 
-# Compression files
+# Compressed files
 *.zip
 *.gz
 *.tar
