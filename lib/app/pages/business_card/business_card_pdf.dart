@@ -1,128 +1,149 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pdf_customizer_app/app/models/dynamic_document_model.dart';
-import '../../controllers/business_card_controller.dart';
+import 'dart:typed_data';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
 
-class BusinessCardForm extends StatelessWidget {
-  const BusinessCardForm({super.key});
+Future<Uint8List> generateBusinessCardPdf({
+  required String fullName,
+  required String jobTitle,
+  required String company,
+  required String phone,
+  required String email,
+  required String website,
+  required String address,
+  required String linkedin,
+  required String twitter,
+}) async {
+  final pdf = pw.Document();
 
-  @override
-  Widget build(BuildContext context) {
-    final BusinessCardController controller = Get.find();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Créer une Carte de Visite'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () => controller.saveBusinessCard(),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Obx(
-          () => ListView.builder(
-            itemCount: controller.fields.length,
-            itemBuilder: (context, index) {
-              final field = controller.fields[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      field.label,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+  pdf.addPage(
+    pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context) {
+        return pw.Center(
+          child: pw.Container(
+            width: 300,
+            height: 180,
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(width: 1),
+              borderRadius: pw.BorderRadius.circular(10),
+            ),
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Text(
+                  fullName,
+                  style: pw.TextStyle(
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 5),
+                pw.Text(
+                  jobTitle,
+                  style: const pw.TextStyle(
+                    fontSize: 12,
+                    color: PdfColors.grey700,
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                if (company.isNotEmpty) ...[
+                  pw.Text(
+                    company,
+                    style: pw.TextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.bold,
                     ),
-                    const SizedBox(height: 8),
-                    if (field.type == FieldType.date)
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: 'Sélectionnez une date',
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.date_range),
-                        ),
-                        readOnly: true,
-                        controller: TextEditingController(text: field.value),
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101),
-                          );
-                          if (pickedDate != null) {
-                            controller.updateFieldValue(
-                              field.id,
-                              pickedDate.toString().split(' ')[0],
-                            );
-                          }
-                        },
+                  ),
+                  pw.SizedBox(height: 10),
+                ],
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    if (phone.isNotEmpty)
+                      pw.Row(
+                        children: [
+                          pw.Text('Tél : ',
+                              style: pw.TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(phone,
+                              style: const pw.TextStyle(fontSize: 10)),
+                        ],
                       ),
-                    if (field.type == FieldType.number)
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: 'Entrez un nombre',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        controller: TextEditingController(text: field.value),
-                        onChanged: (value) => controller.updateFieldValue(
-                          field.id,
-                          value,
-                        ),
+                    if (email.isNotEmpty) ...[
+                      pw.SizedBox(height: 2),
+                      pw.Row(
+                        children: [
+                          pw.Text('Email : ',
+                              style: pw.TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(email,
+                              style: const pw.TextStyle(fontSize: 10)),
+                        ],
                       ),
-                    if (field.type == FieldType.phone)
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: 'Entrez un numéro de téléphone',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.phone,
-                        controller: TextEditingController(text: field.value),
-                        onChanged: (value) => controller.updateFieldValue(
-                          field.id,
-                          value,
-                        ),
+                    ],
+                    if (address.isNotEmpty) ...[
+                      pw.SizedBox(height: 2),
+                      pw.Row(
+                        children: [
+                          pw.Text('Adresse : ',
+                              style: pw.TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(address,
+                              style: const pw.TextStyle(fontSize: 10)),
+                        ],
                       ),
-                    if (field.type == FieldType.email)
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: 'Entrez une adresse email',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        controller: TextEditingController(text: field.value),
-                        onChanged: (value) => controller.updateFieldValue(
-                          field.id,
-                          value,
-                        ),
+                    ],
+                    if (website.isNotEmpty) ...[
+                      pw.SizedBox(height: 2),
+                      pw.Row(
+                        children: [
+                          pw.Text('Site : ',
+                              style: pw.TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(website,
+                              style: const pw.TextStyle(fontSize: 10)),
+                        ],
                       ),
-                    if (field.type == FieldType.text)
-                      TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Entrez ${field.label.toLowerCase()}',
-                          border: const OutlineInputBorder(),
-                        ),
-                        maxLines: field.label.contains('Désignation') ? 3 : 1,
-                        controller: TextEditingController(text: field.value),
-                        onChanged: (value) => controller.updateFieldValue(
-                          field.id,
-                          value,
-                        ),
+                    ],
+                    if (linkedin.isNotEmpty) ...[
+                      pw.SizedBox(height: 2),
+                      pw.Row(
+                        children: [
+                          pw.Text('LinkedIn : ',
+                              style: pw.TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(linkedin,
+                              style: const pw.TextStyle(fontSize: 10)),
+                        ],
                       ),
+                    ],
+                    if (twitter.isNotEmpty) ...[
+                      pw.SizedBox(height: 2),
+                      pw.Row(
+                        children: [
+                          pw.Text('Twitter : ',
+                              style: pw.TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(twitter,
+                              style: const pw.TextStyle(fontSize: 10)),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
-              );
-            },
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
+        );
+      },
+    ),
+  );
+
+  return pdf.save();
 }

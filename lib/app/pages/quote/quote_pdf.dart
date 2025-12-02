@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:pdf/widgets.dart' as pw;
 
 Future<Uint8List> generateQuotePdf({
@@ -40,15 +39,15 @@ Future<Uint8List> generateQuotePdf({
                     children: [
                       pw.Text(
                         'Numéro du devis: $quoteNumber',
-                        style: pw.TextStyle(fontSize: 14),
+                        style: const pw.TextStyle(fontSize: 14),
                       ),
                       pw.Text(
                         'Date: $date',
-                        style: pw.TextStyle(fontSize: 14),
+                        style: const pw.TextStyle(fontSize: 14),
                       ),
                       pw.Text(
                         'Date de validité: $validityDate',
-                        style: pw.TextStyle(fontSize: 14),
+                        style: const pw.TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
@@ -64,8 +63,10 @@ Future<Uint8List> generateQuotePdf({
                           fontWeight: pw.FontWeight.bold,
                         ),
                       ),
-                      pw.Text(clientName, style: pw.TextStyle(fontSize: 14)),
-                      pw.Text(clientAddress, style: pw.TextStyle(fontSize: 14)),
+                      pw.Text(clientName,
+                          style: const pw.TextStyle(fontSize: 14)),
+                      pw.Text(clientAddress,
+                          style: const pw.TextStyle(fontSize: 14)),
                     ],
                   ),
                 ),
@@ -84,7 +85,7 @@ Future<Uint8List> generateQuotePdf({
                     ),
                   ),
                   pw.SizedBox(height: 10),
-                  pw.Text(items, style: pw.TextStyle(fontSize: 14)),
+                  pw.Text(items, style: const pw.TextStyle(fontSize: 14)),
                 ],
               ),
             ),
@@ -96,11 +97,11 @@ Future<Uint8List> generateQuotePdf({
                 children: [
                   pw.Text(
                     'Montant HT: $amount €',
-                    style: pw.TextStyle(fontSize: 14),
+                    style: const pw.TextStyle(fontSize: 14),
                   ),
                   pw.Text(
                     'TVA: $vat €',
-                    style: pw.TextStyle(fontSize: 14),
+                    style: const pw.TextStyle(fontSize: 14),
                   ),
                   pw.Divider(),
                   pw.Text(
@@ -118,7 +119,7 @@ Future<Uint8List> generateQuotePdf({
               alignment: pw.Alignment.centerRight,
               child: pw.Text(
                 'Merci pour votre confiance!',
-                style: pw.TextStyle(fontSize: 12),
+                style: const pw.TextStyle(fontSize: 12),
               ),
             ),
           ],

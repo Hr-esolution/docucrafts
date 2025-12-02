@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:pdf/widgets.dart' as pw;
 
 Future<Uint8List> generateDeliveryPdf({
@@ -40,15 +39,15 @@ Future<Uint8List> generateDeliveryPdf({
                     children: [
                       pw.Text(
                         'Numéro du bon: $deliveryNumber',
-                        style: pw.TextStyle(fontSize: 14),
+                        style: const pw.TextStyle(fontSize: 14),
                       ),
                       pw.Text(
                         'Date: $date',
-                        style: pw.TextStyle(fontSize: 14),
+                        style: const pw.TextStyle(fontSize: 14),
                       ),
                       pw.Text(
                         'Transporteur: $carrier',
-                        style: pw.TextStyle(fontSize: 14),
+                        style: const pw.TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
@@ -64,8 +63,10 @@ Future<Uint8List> generateDeliveryPdf({
                           fontWeight: pw.FontWeight.bold,
                         ),
                       ),
-                      pw.Text(clientName, style: pw.TextStyle(fontSize: 14)),
-                      pw.Text(clientAddress, style: pw.TextStyle(fontSize: 14)),
+                      pw.Text(clientName,
+                          style: const pw.TextStyle(fontSize: 14)),
+                      pw.Text(clientAddress,
+                          style: const pw.TextStyle(fontSize: 14)),
                     ],
                   ),
                 ),
@@ -86,7 +87,7 @@ Future<Uint8List> generateDeliveryPdf({
                         ),
                       ),
                       pw.Text(deliveryAddress,
-                          style: pw.TextStyle(fontSize: 14)),
+                          style: const pw.TextStyle(fontSize: 14)),
                     ],
                   ),
                 ),
@@ -105,7 +106,7 @@ Future<Uint8List> generateDeliveryPdf({
                     ),
                   ),
                   pw.SizedBox(height: 10),
-                  pw.Text(items, style: pw.TextStyle(fontSize: 14)),
+                  pw.Text(items, style: const pw.TextStyle(fontSize: 14)),
                 ],
               ),
             ),
@@ -115,11 +116,11 @@ Future<Uint8List> generateDeliveryPdf({
               children: [
                 pw.Text(
                   'Quantité: $quantity',
-                  style: pw.TextStyle(fontSize: 14),
+                  style: const pw.TextStyle(fontSize: 14),
                 ),
                 pw.Text(
                   'Signature requise: $signatureRequired',
-                  style: pw.TextStyle(fontSize: 14),
+                  style: const pw.TextStyle(fontSize: 14),
                 ),
               ],
             ),
@@ -132,7 +133,7 @@ Future<Uint8List> generateDeliveryPdf({
                   height: 50,
                   child: pw.Text(
                     'Signature du client',
-                    style: pw.TextStyle(fontSize: 12),
+                    style: const pw.TextStyle(fontSize: 12),
                   ),
                   decoration: pw.BoxDecoration(
                     border: pw.Border.all(),
@@ -143,7 +144,7 @@ Future<Uint8List> generateDeliveryPdf({
                   height: 50,
                   child: pw.Text(
                     'Signature du livreur',
-                    style: pw.TextStyle(fontSize: 12),
+                    style: const pw.TextStyle(fontSize: 12),
                   ),
                   decoration: pw.BoxDecoration(
                     border: pw.Border.all(),

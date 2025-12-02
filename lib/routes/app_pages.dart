@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:get/get.dart';
 import 'package:pdf_customizer_app/app/routes/app_routes.dart';
 import '../app/bindings/home_binding.dart';
@@ -6,12 +8,14 @@ import '../app/bindings/quote_binding.dart';
 import '../app/bindings/delivery_binding.dart';
 import '../app/bindings/business_card_binding.dart';
 import '../app/bindings/cv_binding.dart';
+import '../app/bindings/settings_binding.dart';
 import '../app/pages/home/home_page.dart';
 import '../app/pages/invoice/invoice_form_page.dart';
 import '../app/pages/quote/quote_form_page.dart';
 import '../app/pages/delivery/delivery_form_page.dart';
 import '../app/pages/business_card/business_card_form.dart';
 import '../app/pages/cv/cv_form_page.dart';
+import '../app/pages/settings/field_settings_page.dart';
 
 abstract class AppPages {
   static const INITIAL = Routes.HOME;
@@ -46,6 +50,11 @@ abstract class AppPages {
       name: Routes.CV,
       page: () => const CvFormPage(),
       binding: CvBinding(),
+    ),
+    GetPage(
+      name: Routes.SETTINGS,
+      page: () => const FieldSettingsPage(),
+      binding: SettingsBinding(),
     ),
   ];
 }

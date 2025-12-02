@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/dynamic_document_model.dart';
@@ -99,13 +100,17 @@ class StorageRepository {
   String _encodeFields(List<DocumentField> fields) {
     List<Map<String, dynamic>> fieldMaps =
         fields.map((field) => field.toMap()).toList();
-    return fieldMaps.toString();
+    return jsonEncode(fieldMaps);
   }
 
   List<DocumentField> _decodeFields(String fieldsString) {
-    // Cette méthode devrait décoder la chaîne JSON en une liste de DocumentField
-    // Pour l'instant, on retourne une liste vide car la conversion JSON est complexe
-    // Dans une implémentation réelle, vous voudriez utiliser un package comme json_annotation
-    return [];
+    if (fieldsString.isEmpty) return [];
+    try {
+      List<dynamic> fieldList = jsonDecode(fieldsString);
+      return fieldList.map((field) => DocumentField.fromMap(field)).toList();
+    } catch (e) {
+      print('Error decoding fields: $e');
+      return [];
+    }
   }
 }

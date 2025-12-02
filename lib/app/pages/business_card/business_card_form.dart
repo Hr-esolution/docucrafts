@@ -4,7 +4,7 @@ import 'package:pdf_customizer_app/app/models/dynamic_document_model.dart';
 import '../../controllers/business_card_controller.dart';
 
 class BusinessCardForm extends StatelessWidget {
-  const BusinessCardForm({Key? key}) : super(key: key);
+  const BusinessCardForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +42,10 @@ class BusinessCardForm extends StatelessWidget {
                     const SizedBox(height: 8),
                     if (field.type == FieldType.date)
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Sélectionnez une date',
-                          border: const OutlineInputBorder(),
-                          suffixIcon: const Icon(Icons.date_range),
+                          border: OutlineInputBorder(),
+                          suffixIcon: Icon(Icons.date_range),
                         ),
                         readOnly: true,
                         controller: TextEditingController(text: field.value),

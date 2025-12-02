@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
 import '../repositories/storage_repository.dart';
+import '../pages/invoice/invoice_pdf.dart' as invoice_pdf;
+import 'dart:math';
 
 class InvoiceController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
@@ -15,56 +17,189 @@ class InvoiceController extends GetxController {
 
   void _initializeFields() {
     fields.assignAll([
+      // Champs obligatoires pour la mention explicite
       DocumentField(
-        id: 'invoice_number',
-        label: 'Numéro de facture',
-        value: '',
+        id: 'invoice_title',
+        label: 'Mention "Facture"',
+        value: 'Facture',
         type: FieldType.text,
         isRequired: true,
+        isEnabled: true,
       ),
+      // Champs obligatoires pour le numéro de facture
       DocumentField(
-        id: 'date',
-        label: 'Date',
+        id: 'invoice_number',
+        label: 'Numéro de facture unique',
+        value: 'INV-${DateTime.now().year}-${Random().nextInt(900) + 100}',
+        type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      // Champs obligatoires pour les dates
+      DocumentField(
+        id: 'issue_date',
+        label: 'Date d\'émission',
         value: DateTime.now().toString().split(' ')[0],
         type: FieldType.date,
         isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
-        id: 'client_name',
+        id: 'service_date',
+        label: 'Date de prestation/livraison',
+        value: DateTime.now().toString().split(' ')[0],
+        type: FieldType.date,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      // Champs obligatoires pour l'identité du vendeur
+      DocumentField(
+        id: 'seller_name',
+        label: 'Nom du vendeur',
+        value: '',
+        type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'seller_address',
+        label: 'Adresse du vendeur',
+        value: '',
+        type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'seller_vat_number',
+        label: 'Numéro de TVA du vendeur',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'seller_phone',
+        label: 'Téléphone du vendeur',
+        value: '',
+        type: FieldType.phone,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'seller_email',
+        label: 'Email du vendeur',
+        value: '',
+        type: FieldType.email,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      // Champs obligatoires pour l'identité de l'acheteur
+      DocumentField(
+        id: 'buyer_name',
         label: 'Nom du client',
         value: '',
         type: FieldType.text,
         isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
-        id: 'client_address',
+        id: 'buyer_address',
         label: 'Adresse du client',
         value: '',
         type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
-        id: 'items',
-        label: 'Désignation des articles',
+        id: 'buyer_vat_number',
+        label: 'Numéro de TVA intracommunautaire du client',
         value: '',
         type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      // Champs pour la description des biens ou services
+      DocumentField(
+        id: 'item_description',
+        label: 'Désignation des biens ou services',
+        value: '',
+        type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
-        id: 'amount',
-        label: 'Montant',
-        value: '',
+        id: 'item_quantity',
+        label: 'Quantité',
+        value: '1',
         type: FieldType.number,
+        isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
-        id: 'vat',
-        label: 'TVA',
+        id: 'item_unit_price',
+        label: 'Prix unitaire HT',
         value: '',
         type: FieldType.number,
+        isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
-        id: 'total',
-        label: 'Total',
+        id: 'vat_rate',
+        label: 'Taux de TVA',
+        value: '20',
+        type: FieldType.number,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'vat_amount',
+        label: 'Montant de la TVA',
         value: '',
         type: FieldType.number,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      // Champs pour les montants
+      DocumentField(
+        id: 'subtotal_ht',
+        label: 'Sous-total HT',
+        value: '',
+        type: FieldType.number,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'total_ttc',
+        label: 'Total TTC',
+        value: '',
+        type: FieldType.number,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      // Champs pour les conditions de paiement
+      DocumentField(
+        id: 'payment_terms',
+        label: 'Conditions de paiement',
+        value: 'Net à 30 jours',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'payment_method',
+        label: 'Mode de paiement',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'late_fees',
+        label: 'Pénalités de retard',
+        value: '1.5% par mois de retard',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
       ),
     ]);
   }
@@ -78,6 +213,22 @@ class InvoiceController extends GetxController {
         value: newValue,
         type: fields[fieldIndex].type,
         isRequired: fields[fieldIndex].isRequired,
+        isEnabled: fields[fieldIndex].isEnabled,
+      );
+      update();
+    }
+  }
+
+  void toggleFieldEnablement(String fieldId) {
+    final fieldIndex = fields.indexWhere((field) => field.id == fieldId);
+    if (fieldIndex != -1) {
+      fields[fieldIndex] = DocumentField(
+        id: fields[fieldIndex].id,
+        label: fields[fieldIndex].label,
+        value: fields[fieldIndex].value,
+        type: fields[fieldIndex].type,
+        isRequired: fields[fieldIndex].isRequired,
+        isEnabled: !fields[fieldIndex].isEnabled,
       );
       update();
     }
@@ -99,5 +250,67 @@ class InvoiceController extends GetxController {
     } catch (e) {
       Get.snackbar('Erreur', 'Échec de l\'enregistrement de la facture: $e');
     }
+  }
+
+  Future<void> generateInvoicePdf() async {
+    // Récupérer les valeurs des champs
+    final invoiceTitle = _getFieldValue('invoice_title');
+    final invoiceNumber = _getFieldValue('invoice_number');
+    final issueDate = _getFieldValue('issue_date');
+    final serviceDate = _getFieldValue('service_date');
+    final sellerName = _getFieldValue('seller_name');
+    final sellerAddress = _getFieldValue('seller_address');
+    final sellerVatNumber = _getFieldValue('seller_vat_number');
+    final sellerPhone = _getFieldValue('seller_phone');
+    final sellerEmail = _getFieldValue('seller_email');
+    final buyerName = _getFieldValue('buyer_name');
+    final buyerAddress = _getFieldValue('buyer_address');
+    final buyerVatNumber = _getFieldValue('buyer_vat_number');
+    final itemDescription = _getFieldValue('item_description');
+    final itemQuantity = _getFieldValue('item_quantity');
+    final itemUnitPrice = _getFieldValue('item_unit_price');
+    final vatRate = _getFieldValue('vat_rate');
+    final vatAmount = _getFieldValue('vat_amount');
+    final subtotalHt = _getFieldValue('subtotal_ht');
+    final totalTtc = _getFieldValue('total_ttc');
+    final paymentTerms = _getFieldValue('payment_terms');
+    final paymentMethod = _getFieldValue('payment_method');
+    final lateFees = _getFieldValue('late_fees');
+
+    // Générer le PDF
+    await invoice_pdf.generateInvoicePdf(
+      invoiceTitle: invoiceTitle,
+      invoiceNumber: invoiceNumber,
+      issueDate: issueDate,
+      serviceDate: serviceDate,
+      sellerName: sellerName,
+      sellerAddress: sellerAddress,
+      sellerVatNumber: sellerVatNumber,
+      sellerPhone: sellerPhone,
+      sellerEmail: sellerEmail,
+      buyerName: buyerName,
+      buyerAddress: buyerAddress,
+      buyerVatNumber: buyerVatNumber,
+      itemDescription: itemDescription,
+      itemQuantity: itemQuantity,
+      itemUnitPrice: itemUnitPrice,
+      vatRate: vatRate,
+      vatAmount: vatAmount,
+      subtotalHt: subtotalHt,
+      totalTtc: totalTtc,
+      paymentTerms: paymentTerms,
+      paymentMethod: paymentMethod,
+      lateFees: lateFees,
+    );
+
+    // Afficher un message de succès ou gérer le PDF autrement
+    Get.snackbar('Succès', 'PDF généré avec succès');
+  }
+
+  String _getFieldValue(String fieldId) {
+    final field = fields.firstWhere((field) => field.id == fieldId,
+        orElse: () => DocumentField(
+            id: fieldId, label: '', value: '', type: FieldType.text));
+    return field.value;
   }
 }
