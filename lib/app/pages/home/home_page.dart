@@ -22,50 +22,145 @@ class HomePage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Créer un nouveau document',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
-            _buildDocumentCard(
-              title: 'Facture',
-              icon: Icons.receipt,
-              color: Colors.blue,
-              onTap: () => controller.navigateToDocument('invoice'),
-            ),
-            const SizedBox(height: 16),
-            _buildDocumentCard(
-              title: 'Devis',
-              icon: Icons.description,
-              color: Colors.green,
-              onTap: () => controller.navigateToDocument('quote'),
-            ),
-            const SizedBox(height: 16),
-            _buildDocumentCard(
-              title: 'Bon de Livraison',
-              icon: Icons.local_shipping,
-              color: Colors.orange,
-              onTap: () => controller.navigateToDocument('delivery'),
-            ),
-            const SizedBox(height: 16),
-            _buildDocumentCard(
-              title: 'Carte de Visite',
-              icon: Icons.card_membership,
-              color: Colors.purple,
-              onTap: () => controller.navigateToDocument('business_card'),
-            ),
-            const SizedBox(height: 16),
-            _buildDocumentCard(
-              title: 'CV',
-              icon: Icons.person,
-              color: Colors.teal,
-              onTap: () => controller.navigateToDocument('cv'),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Templates Section
+              const Text(
+                'Templates',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: [
+                  _buildTemplateCard(
+                    title: 'Facture',
+                    icon: Icons.receipt,
+                    color: Colors.blue,
+                    onTap: () => controller.navigateToDocument('invoice'),
+                  ),
+                  _buildTemplateCard(
+                    title: 'Devis',
+                    icon: Icons.description,
+                    color: Colors.green,
+                    onTap: () => controller.navigateToDocument('quote'),
+                  ),
+                  _buildTemplateCard(
+                    title: 'Bon de Livraison',
+                    icon: Icons.local_shipping,
+                    color: Colors.orange,
+                    onTap: () => controller.navigateToDocument('delivery'),
+                  ),
+                  _buildTemplateCard(
+                    title: 'Carte de Visite',
+                    icon: Icons.card_membership,
+                    color: Colors.purple,
+                    onTap: () => controller.navigateToDocument('business_card'),
+                  ),
+                  _buildTemplateCard(
+                    title: 'CV',
+                    icon: Icons.person,
+                    color: Colors.teal,
+                    onTap: () => controller.navigateToDocument('cv'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              
+              // My Documents Section
+              const Text(
+                'Mes Documents',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Obx(() {
+                if (controller.documents.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Aucun document trouvé',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  );
+                }
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.documents.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemBuilder: (context, index) {
+                    final document = controller.documents[index];
+                    return _buildDocumentCard(
+                      title: document.title,
+                      icon: Icons.insert_drive_file,
+                      color: Colors.grey,
+                      onTap: () {
+                        // Add functionality to view document
+                        // For now, just show a snackbar
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Document: ${document.title}')),
+                        );
+                      },
+                    );
+                  },
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTemplateCard({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 4,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  size: 30,
+                  color: color,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -79,18 +174,39 @@ class HomePage extends StatelessWidget {
   }) {
     return Card(
       elevation: 4,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.2),
-          foregroundColor: color,
-          child: Icon(icon),
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  size: 30,
+                  color: color,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
