@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
+import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 
 class CvController extends GetxController {
