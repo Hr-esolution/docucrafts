@@ -1,16 +1,46 @@
 import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
+import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 
 class DeliveryController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
   final RxList<DocumentField> fields = <DocumentField>[].obs;
+  final RxList<Product> products = <Product>[].obs;
   final RxString title = "Nouveau Bon de Livraison".obs;
 
   @override
   void onInit() {
     super.onInit();
     _initializeFields();
+  }
+
+  // Product management methods
+  void addProduct(Product product) {
+    products.add(product);
+    update();
+  }
+
+  void removeProduct(Product product) {
+    products.removeWhere((p) => p.id == product.id);
+    update();
+  }
+
+  void updateProduct(Product updatedProduct) {
+    final index = products.indexWhere((p) => p.id == updatedProduct.id);
+    if (index != -1) {
+      products[index] = updatedProduct;
+      update();
+    }
+  }
+
+  void clearProducts() {
+    products.clear();
+    update();
+  }
+
+  List<Product> getProducts() {
+    return products.toList();
   }
 
   void _initializeFields() {
