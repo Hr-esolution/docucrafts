@@ -11,6 +11,7 @@ import '../app/bindings/cv_binding.dart';
 import '../app/bindings/settings_binding.dart';
 import '../app/pages/home/home_page.dart';
 import '../app/pages/invoice/invoice_form_page.dart';
+import '../app/pages/invoice/template_selection_page.dart';
 import '../app/pages/quote/quote_form_page.dart';
 import '../app/pages/delivery/delivery_form_page.dart';
 import '../app/pages/business_card/business_card_form.dart';
@@ -29,6 +30,11 @@ abstract class AppPages {
     GetPage(
       name: Routes.INVOICE,
       page: () => const InvoiceFormPage(),
+      binding: InvoiceBinding(),
+    ),
+    GetPage(
+      name: Routes.INVOICE_TEMPLATE,
+      page: () => const TemplateSelectionPage(),
       binding: InvoiceBinding(),
     ),
     GetPage(

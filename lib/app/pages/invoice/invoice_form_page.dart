@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdf_customizer_app/app/controllers/invoice_controller.dart';
 import 'package:pdf_customizer_app/app/models/dynamic_document_model.dart';
+import 'package:pdf_customizer_app/app/pages/invoice/template_selection_page.dart';
 
 class InvoiceFormPage extends StatelessWidget {
   const InvoiceFormPage({super.key});
@@ -23,6 +24,15 @@ class InvoiceFormPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),
             onPressed: () => controller.generateInvoicePdf(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.style),
+            onPressed: () async {
+              final selectedTemplate = await Get.to(() => const TemplateSelectionPage());
+              if (selectedTemplate != null) {
+                Get.snackbar('Modèle sélectionné', 'Le modèle ${selectedTemplate} a été appliqué');
+              }
+            },
           ),
           IconButton(
             icon: const Icon(Icons.save),

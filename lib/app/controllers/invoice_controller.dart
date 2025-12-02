@@ -2,12 +2,17 @@ import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
 import '../repositories/storage_repository.dart';
 import '../pages/invoice/invoice_pdf.dart' as invoice_pdf;
+import '../pages/invoice/templates/invoice_pdf_minimal.dart' as minimal_template;
+import '../pages/invoice/templates/invoice_pdf_multi.dart' as multi_template;
+import '../pages/invoice/templates/invoice_pdf_premium.dart' as premium_template;
+import 'dart:typed_data';
 import 'dart:math';
 
 class InvoiceController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
   final RxList<DocumentField> fields = <DocumentField>[].obs;
   final RxString title = "Nouvelle Facture".obs;
+  final RxString selectedTemplate = "standard".obs;
 
   @override
   void onInit() {
@@ -307,10 +312,143 @@ class InvoiceController extends GetxController {
     Get.snackbar('Succès', 'PDF généré avec succès');
   }
 
+  void selectTemplate(String templateName) {
+    selectedTemplate.value = templateName;
+    update();
+  }
+
   String _getFieldValue(String fieldId) {
     final field = fields.firstWhere((field) => field.id == fieldId,
         orElse: () => DocumentField(
             id: fieldId, label: '', value: '', type: FieldType.text));
     return field.value;
+  }
+
+  Future<void> generateInvoicePdf() async {
+    // Récupérer les valeurs des champs
+    final invoiceTitle = _getFieldValue('invoice_title');
+    final invoiceNumber = _getFieldValue('invoice_number');
+    final issueDate = _getFieldValue('issue_date');
+    final serviceDate = _getFieldValue('service_date');
+    final sellerName = _getFieldValue('seller_name');
+    final sellerAddress = _getFieldValue('seller_address');
+    final sellerVatNumber = _getFieldValue('seller_vat_number');
+    final sellerPhone = _getFieldValue('seller_phone');
+    final sellerEmail = _getFieldValue('seller_email');
+    final buyerName = _getFieldValue('buyer_name');
+    final buyerAddress = _getFieldValue('buyer_address');
+    final buyerVatNumber = _getFieldValue('buyer_vat_number');
+    final itemDescription = _getFieldValue('item_description');
+    final itemQuantity = _getFieldValue('item_quantity');
+    final itemUnitPrice = _getFieldValue('item_unit_price');
+    final vatRate = _getFieldValue('vat_rate');
+    final vatAmount = _getFieldValue('vat_amount');
+    final subtotalHt = _getFieldValue('subtotal_ht');
+    final totalTtc = _getFieldValue('total_ttc');
+    final paymentTerms = _getFieldValue('payment_terms');
+    final paymentMethod = _getFieldValue('payment_method');
+    final lateFees = _getFieldValue('late_fees');
+
+    // Générer le PDF selon le modèle sélectionné
+    switch (selectedTemplate.value) {
+      case 'standard':
+        await invoice_pdf.generateInvoicePdf(
+          invoiceTitle: invoiceTitle,
+          invoiceNumber: invoiceNumber,
+          issueDate: issueDate,
+          serviceDate: serviceDate,
+          sellerName: sellerName,
+          sellerAddress: sellerAddress,
+          sellerVatNumber: sellerVatNumber,
+          sellerPhone: sellerPhone,
+          sellerEmail: sellerEmail,
+          buyerName: buyerName,
+          buyerAddress: buyerAddress,
+          buyerVatNumber: buyerVatNumber,
+          itemDescription: itemDescription,
+          itemQuantity: itemQuantity,
+          itemUnitPrice: itemUnitPrice,
+          vatRate: vatRate,
+          vatAmount: vatAmount,
+          subtotalHt: subtotalHt,
+          totalTtc: totalTtc,
+          paymentTerms: paymentTerms,
+          paymentMethod: paymentMethod,
+          lateFees: lateFees,
+        );
+        break;
+      case 'minimal':
+        final data = {
+          "title": invoiceTitle,
+          "invoiceNumber": invoiceNumber,
+          "issueDate": issueDate,
+          "sellerName": sellerName,
+          "sellerAddress": sellerAddress,
+          "buyerName": buyerName,
+          "buyerAddress": buyerAddress,
+          "description": itemDescription,
+          "quantity": itemQuantity,
+          "price": itemUnitPrice,
+          "total": subtotalHt,
+          "totalTtc": totalTtc,
+        };
+        await minimal_template.generateMinimalInvoicePdf(data);
+        break;
+      case 'multi':
+        final data = {
+          "buyerName": buyerName,
+          "totalTtc": totalTtc,
+        };
+        // Créer un item pour le modèle multi
+        final items = [
+          multi_template.InvoiceItem(itemDescription, int.tryParse(itemQuantity) ?? 1, double.tryParse(itemUnitPrice) ?? 0.0),
+        ];
+        await multi_template.generateMultiInvoicePdf(data, items);
+        break;
+      case 'premium':
+        final data = {
+          "invoiceNumber": invoiceNumber,
+          "sellerName": sellerName,
+          "sellerAddress": sellerAddress,
+          "buyerName": buyerName,
+          "buyerAddress": buyerAddress,
+          "description": itemDescription,
+          "quantity": itemQuantity,
+          "price": itemUnitPrice,
+          "total": subtotalHt,
+          "totalTtc": totalTtc,
+        };
+        // Pour l'instant, on utilise un logo vide - à implémenter plus tard
+        await premium_template.generatePremiumInvoicePdf(data, Uint8List(0));
+        break;
+      default:
+        await invoice_pdf.generateInvoicePdf(
+          invoiceTitle: invoiceTitle,
+          invoiceNumber: invoiceNumber,
+          issueDate: issueDate,
+          serviceDate: serviceDate,
+          sellerName: sellerName,
+          sellerAddress: sellerAddress,
+          sellerVatNumber: sellerVatNumber,
+          sellerPhone: sellerPhone,
+          sellerEmail: sellerEmail,
+          buyerName: buyerName,
+          buyerAddress: buyerAddress,
+          buyerVatNumber: buyerVatNumber,
+          itemDescription: itemDescription,
+          itemQuantity: itemQuantity,
+          itemUnitPrice: itemUnitPrice,
+          vatRate: vatRate,
+          vatAmount: vatAmount,
+          subtotalHt: subtotalHt,
+          totalTtc: totalTtc,
+          paymentTerms: paymentTerms,
+          paymentMethod: paymentMethod,
+          lateFees: lateFees,
+        );
+    }
+
+    // Afficher un message de succès ou gérer le PDF autrement
+    Get.snackbar('Succès', 'PDF généré avec succès avec le modèle ${selectedTemplate.value}');
   }
 }
