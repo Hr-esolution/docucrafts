@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart' as pdf;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generateMinimalBusinessCardPdf(Map<String, dynamic> data) async {
@@ -7,20 +8,20 @@ Future<File> generateMinimalBusinessCardPdf(Map<String, dynamic> data) async {
 
   pdf.addPage(
     pw.Page(
-      pageFormat: pw.PageFormat.a4.applyMargin(
-        left: 2.0 * pw.PdfPageMetrics.mm,
-        top: 2.0 * pw.PdfPageMetrics.mm,
-        right: 2.0 * pw.PdfPageMetrics.mm,
-        bottom: 2.0 * pw.PdfPageMetrics.mm,
+      pageFormat: pdf.PdfPageFormat.a4.applyMargin(
+        left: 2.0 * pdf.PdfPageMetrics.mm,
+        top: 2.0 * pdf.PdfPageMetrics.mm,
+        right: 2.0 * pdf.PdfPageMetrics.mm,
+        bottom: 2.0 * pdf.PdfPageMetrics.mm,
       ),
       build: (context) {
         return pw.Center(
           child: pw.Container(
-            width: 85 * pw.PdfPageMetrics.mm,
-            height: 55 * pw.PdfPageMetrics.mm,
+            width: 85 * pdf.PdfPageMetrics.mm,
+            height: 55 * pdf.PdfPageMetrics.mm,
             decoration: pw.BoxDecoration(
               border: pw.BoxBorder.all(
-                color: pw.PdfColors.black,
+                color: pdf.PdfColors.black,
               ),
             ),
             child: pw.Padding(

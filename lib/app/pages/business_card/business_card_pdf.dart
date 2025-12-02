@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
+import 'package:pdf/pdf.dart' as pdf;
 
 Future<Uint8List> generateBusinessCardPdf({
   required String fullName,
@@ -17,7 +17,7 @@ Future<Uint8List> generateBusinessCardPdf({
 
   pdf.addPage(
     pw.Page(
-      pageFormat: PdfPageFormat.a4,
+      pageFormat: pdf.PdfPageFormat.a4,
       build: (pw.Context context) {
         return pw.Center(
           child: pw.Container(
@@ -42,7 +42,7 @@ Future<Uint8List> generateBusinessCardPdf({
                   jobTitle,
                   style: const pw.TextStyle(
                     fontSize: 12,
-                    color: PdfColors.grey700,
+                    color: pdf.PdfColors.grey700,
                   ),
                 ),
                 pw.SizedBox(height: 10),
