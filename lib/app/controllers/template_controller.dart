@@ -5,8 +5,10 @@ import '../repositories/template_repository.dart';
 class TemplateController extends GetxController {
   final TemplateRepository _repository = TemplateRepository();
   final RxList<Template> _templates = <Template>[].obs;
+  final RxString _selectedTemplateId = ''.obs;
 
   List<Template> get templates => _templates.toList();
+  String get selectedTemplateId => _selectedTemplateId.value;
 
   @override
   void onInit() {
@@ -43,6 +45,17 @@ class TemplateController extends GetxController {
 
   List<Template> getTemplatesByCategory(String category) {
     return _templates.where((t) => t.category == category).toList();
+  }
+
+  void setSelectedTemplate(String templateId) {
+    _selectedTemplateId.value = templateId;
+  }
+
+  Template? getSelectedTemplate() {
+    if (_selectedTemplateId.value.isEmpty) {
+      return null;
+    }
+    return getTemplateById(_selectedTemplateId.value);
   }
 
   Future<void> addDefaultTemplates() async {

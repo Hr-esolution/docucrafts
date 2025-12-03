@@ -24,7 +24,7 @@ class TemplateSelectionPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Select Template for $documentType'),
+        title: Text('Select Template for ${_getDocumentTypeName(documentType)}'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -50,9 +50,14 @@ class TemplateSelectionPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 60),
-              const Text(
+              Text(
                 'Choose a Template',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Select from our collection of ${_getDocumentTypeName(documentType).toLowerCase()} templates',
+                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
               ),
               const SizedBox(height: 16),
               Obx(() {
@@ -70,7 +75,7 @@ class TemplateSelectionPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No templates available for $documentType',
+                            'No templates available for ${_getDocumentTypeName(documentType)}',
                             style: const TextStyle(
                               fontSize: 16,
                               color: Colors.grey,
@@ -122,6 +127,9 @@ class TemplateSelectionPage extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: InkWell(
           onTap: () {
+            // Store the selected template in the controller
+            final TemplateController templateController = Get.find<TemplateController>();
+            templateController.setSelectedTemplate(template.id);
             onTemplateSelected(template.id);
             Get.back();
           },
@@ -305,5 +313,22 @@ class TemplateSelectionPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getDocumentTypeName(String type) {
+    switch (type) {
+      case 'invoice':
+        return 'Facture';
+      case 'quote':
+        return 'Devis';
+      case 'delivery':
+        return 'Bon de Livraison';
+      case 'business_card':
+        return 'Carte de Visite';
+      case 'cv':
+        return 'CV';
+      default:
+        return 'Document';
+    }
   }
 }

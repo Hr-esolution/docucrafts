@@ -21,11 +21,11 @@ class InvoiceController extends GetxController {
 
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for invoices
-    final invoiceTemplates = _templateController.getTemplatesByCategory('invoice');
-    if (invoiceTemplates.isNotEmpty) {
-      // Use the first available template
-      final template = invoiceTemplates.first;
-      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    if (selectedTemplate != null && selectedTemplate.category == 'invoice') {
+      // Use the selected template
+      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
         id: fieldMap['id'] ?? '',
         label: fieldMap['label'] ?? '',
         value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',

@@ -19,11 +19,11 @@ class QuoteController extends GetxController {
 
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for quotes
-    final quoteTemplates = _templateController.getTemplatesByCategory('quote');
-    if (quoteTemplates.isNotEmpty) {
-      // Use the first available template
-      final template = quoteTemplates.first;
-      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    if (selectedTemplate != null && selectedTemplate.category == 'quote') {
+      // Use the selected template
+      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
         id: fieldMap['id'] ?? '',
         label: fieldMap['label'] ?? '',
         value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',

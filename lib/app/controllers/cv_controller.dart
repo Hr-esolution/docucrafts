@@ -17,11 +17,12 @@ class CvController extends GetxController {
 
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for CVs
-    final cvTemplates = _templateController.getTemplatesByCategory('cv');
-    if (cvTemplates.isNotEmpty) {
-      // Use the first available template
-      final template = cvTemplates.first;
-      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+    final TemplateController _templateController = Get.find<TemplateController>();
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    if (selectedTemplate != null && selectedTemplate.category == 'cv') {
+      // Use the selected template
+      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
         id: fieldMap['id'] ?? '',
         label: fieldMap['label'] ?? '',
         value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',

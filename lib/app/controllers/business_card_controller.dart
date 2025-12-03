@@ -10,10 +10,31 @@ class BusinessCardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeFields();
+    _initializeFieldsWithTemplate();
   }
 
-  void _initializeFields() {
+  void _initializeFieldsWithTemplate() {
+    // Try to get the selected template for business cards
+    final TemplateController _templateController = Get.find<TemplateController>();
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    if (selectedTemplate != null && selectedTemplate.category == 'business_card') {
+      // Use the selected template
+      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
+        id: fieldMap['id'] ?? '',
+        label: fieldMap['label'] ?? '',
+        value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
+        type: _stringToFieldType(fieldMap['type'] ?? 'text'),
+        isRequired: fieldMap['isRequired'] ?? false,
+        isEnabled: fieldMap['isEnabled'] ?? true,
+      )).toList());
+    } else {
+      // Fallback to default fields if no template is available
+      _initializeDefaultFields();
+    }
+  }
+
+  void _initializeDefaultFields() {
     fields.assignAll([
       DocumentField(
         id: 'full_name',
@@ -72,6 +93,22 @@ class BusinessCardController extends GetxController {
         type: FieldType.text,
       ),
     ]);
+  }
+
+  FieldType _stringToFieldType(String type) {
+    switch (type) {
+      case 'number':
+        return FieldType.number;
+      case 'date':
+        return FieldType.date;
+      case 'email':
+        return FieldType.email;
+      case 'phone':
+        return FieldType.phone;
+      case 'text':
+      default:
+        return FieldType.text;
+    }
   }
 
   void updateFieldValue(String fieldId, String newValue) {
