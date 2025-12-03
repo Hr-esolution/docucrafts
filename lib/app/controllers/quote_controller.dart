@@ -226,7 +226,7 @@ class QuoteController extends GetxController {
           Get.to(() => MinimalQuotePreview(data: data));
           break;
         case 'quote_multi_column':
-          Get.to(() => MultiColumnQuotePreview(data: data));
+          Get.to(() => MultiQuotePreview(data: data));
           break;
         case 'quote_premium':
           Get.to(() => PremiumQuotePreview(data: data));
