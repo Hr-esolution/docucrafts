@@ -173,8 +173,8 @@ class ProfessionalCVPreview extends StatelessWidget {
     );
   }
 
-  void _printDocument(BuildContext context) {
-    final document = _generatePdfDocument();
+  Future<void> _printDocument(BuildContext context) async {
+    final document = await _generatePdfDocument();
     Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => document.save(),
     );
