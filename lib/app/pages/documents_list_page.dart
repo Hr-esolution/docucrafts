@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:typed_data';
+import 'document_details_page.dart'; // Added document details page import
 
 class DocumentsListPage extends StatelessWidget {
   const DocumentsListPage({super.key});
@@ -85,7 +86,10 @@ class DocumentsListPage extends StatelessWidget {
                     itemCount: controller.documents.length,
                     itemBuilder: (context, index) {
                       final document = controller.documents[index];
-                      return _buildDocumentCard(document, context);
+                      return GestureDetector(
+                        onTap: () => Get.to(() => DocumentDetailsPage(document: document)),
+                        child: _buildDocumentCard(document, context),
+                      );
                     },
                   );
                 }),

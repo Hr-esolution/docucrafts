@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../controllers/home_controller.dart';
 import 'dart:ui';
 import 'package:share_plus/share_plus.dart';
+import '../document_details_page.dart'; // Added document details page import
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -70,16 +71,16 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 16,
                   children: [
                     _buildTemplateCard(
-                      title: 'Facture',
-                      icon: Icons.receipt,
-                      color: Colors.blue,
-                      onTap: () => controller.navigateToDocument('invoice'),
-                    ),
-                    _buildTemplateCard(
                       title: 'Devis',
                       icon: Icons.description,
                       color: Colors.green,
                       onTap: () => controller.navigateToDocument('quote'),
+                    ),
+                    _buildTemplateCard(
+                      title: 'Facture',
+                      icon: Icons.receipt,
+                      color: Colors.blue,
+                      onTap: () => controller.navigateToDocument('invoice'),
                     ),
                     _buildTemplateCard(
                       title: 'Bon de Livraison',
@@ -103,9 +104,9 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
 
-                // Settings Section
+                // Gestion Section
                 const Text(
-                  'Paramètres',
+                  'Gestion',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
@@ -497,77 +498,7 @@ class HomePage extends StatelessWidget {
   }
 
   void _showDocumentDetails(dynamic document, BuildContext context) {
-    Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  document.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Get.back(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Type: ${_getDocumentTypeName(document.type)}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Créé le: ${_formatDate(document.createdAt)}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => _shareDocument(document),
-                  icon: const Icon(Icons.share, size: 18),
-                  label: const Text('Partager'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () => _deleteDocument(document),
-                  icon: const Icon(Icons.delete, size: 18),
-                  label: const Text('Supprimer'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    Get.to(() => DocumentDetailsPage(document: document));
   }
 
   String _getDocumentTypeName(String type) {
@@ -589,46 +520,5 @@ class HomePage extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
-  }
-
-  Future<void> _shareDocument(dynamic document) async {
-    try {
-      String content = '''
-Document: ${document.title}
-Type: ${_getDocumentTypeName(document.type)}
-Créé le: ${_formatDate(document.createdAt)}
-
-Détails:
-''';
-      
-      for (var field in document.fields) {
-        if (field.value.isNotEmpty) {
-          content += '${field.label}: ${field.value}\n';
-        }
-      }
-
-      await Get.back(); // Fermer le bottom sheet
-      await Share.share(content, subject: 'Document - ${document.title}');
-    } catch (e) {
-      Get.snackbar('Erreur', 'Impossible de partager le document: $e');
-    }
-  }
-
-  Future<void> _deleteDocument(dynamic document) async {
-    Get.back(); // Fermer le bottom sheet
-    Get.defaultDialog(
-      title: "Confirmer la suppression",
-      middleText: "Voulez-vous vraiment supprimer le document \"${document.title}\" ?",
-      textConfirm: "Supprimer",
-      textCancel: "Annuler",
-      confirm: () async {
-        final HomeController controller = Get.find<HomeController>();
-        await controller.deleteDocument(document.id);
-        Get.back();
-        Get.snackbar('Succès', 'Document supprimé avec succès');
-      },
-      cancel: () => Get.back(),
-      barrierDismissible: true,
-    );
   }
 }
