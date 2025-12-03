@@ -26,9 +26,9 @@ Future<Uint8List> generateInvoicePdf({
   required String paymentMethod,
   required String lateFees,
 }) async {
-  final pdf = pw.Document();
+  final doc = pw.Document();
 
-  pdf.addPage(
+  doc.addPage(
     pw.Page(
       build: (pw.Context context) {
         return pw.Column(
@@ -279,5 +279,5 @@ Future<Uint8List> generateInvoicePdf({
     ),
   );
 
-  return pdf.save();
+  return doc.save();
 }

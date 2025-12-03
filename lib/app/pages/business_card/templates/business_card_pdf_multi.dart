@@ -4,26 +4,26 @@ import 'package:pdf/pdf.dart' as pdf;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
-  final pdf = pw.Document();
+  final doc = pw.Document();
 
-  pdf.addPage(
+  doc.addPage(
     pw.Page(
-      pageFormat: pw.PageFormat.a4.applyMargin(
-        left: 2.0 * pw.PdfPageMetrics.mm,
-        top: 2.0 * pw.PdfPageMetrics.mm,
-        right: 2.0 * pw.PdfPageMetrics.mm,
-        bottom: 2.0 * pw.PdfPageMetrics.mm,
+      pageFormat: pdf.PdfPageFormat.a4.applyMargin(
+        left: 2.0 * pdf.PdfPageMetrics.mm,
+        top: 2.0 * pdf.PdfPageMetrics.mm,
+        right: 2.0 * pdf.PdfPageMetrics.mm,
+        bottom: 2.0 * pdf.PdfPageMetrics.mm,
       ),
       build: (context) {
         return pw.Center(
           child: pw.Container(
-            width: 85 * pw.PdfPageMetrics.mm,
-            height: 55 * pw.PdfPageMetrics.mm,
+            width: 85 * pdf.PdfPageMetrics.mm,
+            height: 55 * pdf.PdfPageMetrics.mm,
             decoration: pw.BoxDecoration(
               border: pw.BoxBorder.all(
-                color: pw.PdfColors.grey,
+                color: pdf.PdfColors.grey,
               ),
-              color: pw.PdfColors.grey100,
+              color: pdf.PdfColors.grey100,
             ),
             child: pw.Padding(
               padding: const pw.EdgeInsets.all(12),
@@ -41,7 +41,7 @@ Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
                   pw.SizedBox(height: 8),
                   pw.Divider(
                     thickness: 1,
-                    color: pw.PdfColors.grey,
+                    color: pdf.PdfColors.grey,
                   ),
                   pw.SizedBox(height: 8),
                   pw.Row(
@@ -75,7 +75,7 @@ Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
                   ),
                   pw.SizedBox(height: 5),
                   pw.Text(data["website"] ?? "",
-                      style: pw.TextStyle(fontSize: 9, color: pw.PdfColors.blue)),
+                      style: pw.TextStyle(fontSize: 9, color: pdf.PdfColors.blue)),
                 ],
               ),
             ),
@@ -87,6 +87,6 @@ Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
 
   final dir = await getTemporaryDirectory();
   final file = File("${dir.path}/business_card_multi.pdf");
-  await file.writeAsBytes(await pdf.save());
+  await file.writeAsBytes(await doc.save());
   return file;
 }

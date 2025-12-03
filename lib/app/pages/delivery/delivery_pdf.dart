@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart' as pdf;
 
 Future<Uint8List> generateDeliveryPdf({
   required String deliveryNumber,
@@ -12,10 +13,11 @@ Future<Uint8List> generateDeliveryPdf({
   required String carrier,
   required String signatureRequired,
 }) async {
-  final pdf = pw.Document();
+  final doc = pw.Document();
 
-  pdf.addPage(
+  doc.addPage(
     pw.Page(
+      pageFormat: pdf.PdfPageFormat.a4,
       build: (pw.Context context) {
         return pw.Column(
           children: [
@@ -158,5 +160,5 @@ Future<Uint8List> generateDeliveryPdf({
     ),
   );
 
-  return pdf.save();
+  return doc.save();
 }
