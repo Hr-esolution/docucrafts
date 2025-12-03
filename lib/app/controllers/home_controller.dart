@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../repositories/storage_repository.dart';
 import '../models/dynamic_document_model.dart';
+import '../controllers/template_controller.dart';
 
 class HomeController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
@@ -22,22 +23,7 @@ class HomeController extends GetxController {
   }
 
   void navigateToDocument(String type) {
-    switch (type) {
-      case 'invoice':
-        Get.toNamed('/invoice');
-        break;
-      case 'quote':
-        Get.toNamed('/quote');
-        break;
-      case 'delivery':
-        Get.toNamed('/delivery');
-        break;
-      case 'business_card':
-        Get.toNamed('/business_card');
-        break;
-      case 'cv':
-        Get.toNamed('/cv');
-        break;
-    }
+    // Navigate to template selection page first
+    Get.toNamed('/templates/$type');
   }
 }

@@ -9,6 +9,7 @@ class ProductSelectionWidget extends StatelessWidget {
   final Function(Product) onRemoveProduct;
   final Function(Product) onProductUpdated;
   final bool showManualEntry;
+  final Function()? onAddMultipleProducts;
 
   const ProductSelectionWidget({
     super.key,
@@ -17,6 +18,7 @@ class ProductSelectionWidget extends StatelessWidget {
     required this.onRemoveProduct,
     required this.onProductUpdated,
     this.showManualEntry = true,
+    this.onAddMultipleProducts,
   });
 
   @override
@@ -65,23 +67,42 @@ class ProductSelectionWidget extends StatelessWidget {
                 )
               : const Text('No products available. Add some products first.'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
 
-        // Manual product entry section
-        if (showManualEntry) ...[
-          ElevatedButton.icon(
-            onPressed: () {
-              _showManualProductDialog(context, onAddProduct);
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('Add Manual Product'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
+        // Add multiple products button
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _showProductSelectionDialog(context, onAddProduct);
+                },
+                icon: const Icon(Icons.add_box),
+                label: const Text('Add Multiple Products'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(width: 8),
+            if (showManualEntry)
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    _showManualProductDialog(context, onAddProduct);
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add Manual Product'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 16),
 
         // Selected products list
         if (selectedProducts.isNotEmpty) ...[
@@ -316,5 +337,66 @@ class ProductSelectionWidget extends StatelessWidget {
     priceController.dispose();
     unitController.dispose();
     taxController.dispose();
+  }
+
+  Future<void> _showProductSelectionDialog(
+    BuildContext context,
+    Function(Product) onAddProduct,
+  ) async {
+    final ProductController productController = Get.find<ProductController>();
+    await productController.loadProducts(); // Make sure products are loaded
+    
+    final selectedProductIds = <String>[];
+    
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Products'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Obx(
+            () => productController.products.isEmpty
+                ? const Text('No products available.')
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: productController.products.length,
+                    itemBuilder: (context, index) {
+                      final product = productController.products[index];
+                      return CheckboxListTile(
+                        title: Text(product.name),
+                        subtitle: Text('${product.description} - \$${product.price} (${product.unit})'),
+                        value: selectedProductIds.contains(product.id),
+                        onChanged: (bool? value) {
+                          if (value == true) {
+                            selectedProductIds.add(product.id);
+                          } else {
+                            selectedProductIds.remove(product.id);
+                          }
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              for (String id in selectedProductIds) {
+                final product = productController.getProductById(id);
+                if (product != null) {
+                  onAddProduct(product);
+                }
+              }
+              Navigator.of(context).pop();
+            },
+            child: const Text('Add Selected'),
+          ),
+        ],
+      ),
+    );
   }
 }
