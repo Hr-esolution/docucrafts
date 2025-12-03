@@ -71,7 +71,7 @@ class _ProductSelectionWidgetState extends State<ProductSelectionWidget> {
                       return DropdownMenuItem(
                         value: product,
                         child: Text(
-                            '${product.name} - \\$${product.price} (${product.unit})'),
+                            '${product.name} - \\${product.price} (${product.unit})'),
                       );
                     }).toList(),
                     onChanged: (Product? selectedProduct) {
@@ -133,8 +133,8 @@ class _ProductSelectionWidgetState extends State<ProductSelectionWidget> {
           ...widget.selectedProducts.asMap().entries.map((entry) {
             int index = entry.key;
             Product product = entry.value;
-            return _buildProductItem(
-                product, index, widget.onRemoveProduct, widget.onProductUpdated);
+            return _buildProductItem(product, index, widget.onRemoveProduct,
+                widget.onProductUpdated);
           }),
         ],
       ],
@@ -152,7 +152,8 @@ class _ProductSelectionWidgetState extends State<ProductSelectionWidget> {
       _quantityControllers[product.id] = TextEditingController(text: '1');
     }
     if (!_priceControllers.containsKey(product.id)) {
-      _priceControllers[product.id] = TextEditingController(text: product.price.toString());
+      _priceControllers[product.id] =
+          TextEditingController(text: product.price.toString());
     }
 
     final quantityController = _quantityControllers[product.id]!;
@@ -373,9 +374,9 @@ class _ProductSelectionWidgetState extends State<ProductSelectionWidget> {
   ) async {
     final ProductController productController = Get.find<ProductController>();
     await productController.loadProducts(); // Make sure products are loaded
-    
+
     final selectedProductIds = <String>[];
-    
+
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -392,7 +393,8 @@ class _ProductSelectionWidgetState extends State<ProductSelectionWidget> {
                       final product = productController.products[index];
                       return CheckboxListTile(
                         title: Text(product.name),
-                        subtitle: Text('${product.description} - \\$${product.price} (${product.unit})'),
+                        subtitle: Text(
+                            '${product.description} - \\${product.price} (${product.unit})'),
                         value: selectedProductIds.contains(product.id),
                         onChanged: (bool? value) {
                           if (value == true) {

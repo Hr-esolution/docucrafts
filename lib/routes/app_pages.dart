@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:get/get.dart';
+import 'package:pdf_customizer_app/app/models/dynamic_document_model.dart';
 import 'package:pdf_customizer_app/app/routes/app_routes.dart';
 import '../app/bindings/home_binding.dart';
 import '../app/bindings/invoice_binding.dart';

@@ -7,7 +7,8 @@ import 'package:share_plus/share_plus.dart';
 class DocumentDetailsPage extends StatelessWidget {
   final DynamicDocumentModel document;
 
-  const DocumentDetailsPage({Key? key, required this.document}) : super(key: key);
+  const DocumentDetailsPage({Key? key, required this.document})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class DocumentDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Détails du Document'),
+        title: const Text('Détails du Document'),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -51,9 +52,7 @@ class DocumentDetailsPage extends StatelessWidget {
               const SizedBox(height: 20),
               _buildDocumentHeader(),
               const SizedBox(height: 20),
-              Expanded(
-                child: _buildDocumentContent(),
-              ),
+              Expanded(child: _buildDocumentContent()),
             ],
           ),
         ),
@@ -66,29 +65,26 @@ class DocumentDetailsPage extends StatelessWidget {
     );
   }
 
+  // ---------------------------------------------
+  // HEADER
+  // ---------------------------------------------
   Widget _buildDocumentHeader() {
-    String documentIcon = _getDocumentIcon(document.type);
-    Color documentColor = _getDocumentColor(document.type);
+    Color color = _getDocumentColor(document.type);
+    IconData icon = _getDocumentIcon(document.type);
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
           colors: [
             Colors.white.withOpacity(0.5),
             Colors.white.withOpacity(0.1),
           ],
         ),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.3),
-          width: 1.5,
-        ),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -97,24 +93,15 @@ class DocumentDetailsPage extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
                     colors: [
-                      documentColor.withOpacity(0.3),
-                      documentColor.withOpacity(0.1),
+                      color.withOpacity(0.3),
+                      color.withOpacity(0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: documentColor.withOpacity(0.4),
-                    width: 1,
-                  ),
+                  border: Border.all(color: color.withOpacity(0.4)),
                 ),
-                child: Icon(
-                  IconData(documentIcon.codeUnitAt(0), fontFamily: 'MaterialIcons'),
-                  size: 30,
-                  color: documentColor,
-                ),
+                child: Icon(icon, size: 32, color: color),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -124,17 +111,12 @@ class DocumentDetailsPage extends StatelessWidget {
                     Text(
                       document.title,
                       style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       _getDocumentTypeName(document.type),
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                     ),
                   ],
                 ),
@@ -144,9 +126,10 @@ class DocumentDetailsPage extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildInfoItem(Icons.calendar_today, 'Créé le', _formatDate(document.createdAt)),
-              const SizedBox(width: 16),
-              _buildInfoItem(Icons.update, 'Modifié le', _formatDate(document.updatedAt)),
+              _buildInfoItem(Icons.calendar_today, 'Créé le',
+                  _formatDate(document.createdAt)),
+              _buildInfoItem(
+                  Icons.update, 'Modifié le', _formatDate(document.updatedAt)),
             ],
           ),
         ],
@@ -158,40 +141,34 @@ class DocumentDetailsPage extends StatelessWidget {
     return Expanded(
       child: Row(
         children: [
-          Icon(icon, size: 16, color: Colors.grey[600]),
+          Icon(icon, size: 16, color: Colors.grey[700]),
           const SizedBox(width: 4),
           Text(
-            '$label: $value',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            "$label: $value",
+            style: TextStyle(fontSize: 12, color: Colors.grey[700]),
           ),
         ],
       ),
     );
   }
 
+  // ---------------------------------------------
+  // CONTENT
+  // ---------------------------------------------
   Widget _buildDocumentContent() {
-    List<DocumentField> filledFields = document.fields.where((field) => field.value.isNotEmpty).toList();
+    List<DocumentField> filledFields =
+        document.fields.where((field) => field.value.isNotEmpty).toList();
 
     if (filledFields.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.info_outline,
-              size: 80,
-              color: Colors.grey,
-            ),
-            const SizedBox(height: 16),
+          children: const [
+            Icon(Icons.info_outline, size: 80, color: Colors.grey),
+            SizedBox(height: 16),
             Text(
               'Aucune donnée enregistrée',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -200,10 +177,7 @@ class DocumentDetailsPage extends StatelessWidget {
 
     return ListView.builder(
       itemCount: filledFields.length,
-      itemBuilder: (context, index) {
-        final field = filledFields[index];
-        return _buildFieldItem(field);
-      },
+      itemBuilder: (context, index) => _buildFieldItem(filledFields[index]),
     );
   }
 
@@ -212,26 +186,18 @@ class DocumentDetailsPage extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
+        color: Colors.white.withOpacity(0.8),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.2),
-        ),
+        border: Border.all(color: Colors.grey.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            field.label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
+          Text(field.label,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Container(
-            width: double.infinity,
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.grey[100],
@@ -239,10 +205,7 @@ class DocumentDetailsPage extends StatelessWidget {
             ),
             child: Text(
               field.value,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-              ),
+              style: const TextStyle(fontSize: 14),
             ),
           ),
         ],
@@ -250,20 +213,23 @@ class DocumentDetailsPage extends StatelessWidget {
     );
   }
 
-  String _getDocumentIcon(String type) {
+  // ---------------------------------------------
+  // HELPERS
+  // ---------------------------------------------
+  IconData _getDocumentIcon(String type) {
     switch (type) {
       case 'invoice':
-        return Icons.receipt.toString();
+        return Icons.receipt_long;
       case 'quote':
-        return Icons.description.toString();
+        return Icons.request_quote;
       case 'delivery':
-        return Icons.local_shipping.toString();
+        return Icons.local_shipping;
       case 'business_card':
-        return Icons.card_membership.toString();
+        return Icons.business_center;
       case 'cv':
-        return Icons.person.toString();
+        return Icons.person;
       default:
-        return Icons.insert_drive_file.toString();
+        return Icons.insert_drive_file;
     }
   }
 
@@ -302,9 +268,12 @@ class DocumentDetailsPage extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+    return "${date.day}/${date.month}/${date.year}";
   }
 
+  // ---------------------------------------------
+  // SHARE
+  // ---------------------------------------------
   Future<void> _shareDocument(DynamicDocumentModel document) async {
     try {
       String content = '''
@@ -315,7 +284,7 @@ Modifié le: ${_formatDate(document.updatedAt)}
 
 Détails:
 ''';
-      
+
       for (var field in document.fields) {
         if (field.value.isNotEmpty) {
           content += '${field.label}: ${field.value}\n';
@@ -324,23 +293,28 @@ Détails:
 
       await Share.share(content, subject: 'Document - ${document.title}');
     } catch (e) {
-      Get.snackbar('Erreur', 'Impossible de partager le document: $e');
+      Get.snackbar('Erreur', 'Impossible de partager: $e');
     }
   }
 
-  Future<void> _deleteDocument(HomeController controller, DynamicDocumentModel document) async {
+  // ---------------------------------------------
+  // DELETE (corrigé)
+  // ---------------------------------------------
+  Future<void> _deleteDocument(
+      HomeController controller, DynamicDocumentModel document) async {
     Get.defaultDialog(
       title: "Confirmer la suppression",
-      middleText: "Voulez-vous vraiment supprimer le document \"${document.title}\" ?",
+      middleText:
+          "Voulez-vous vraiment supprimer le document \"${document.title}\" ?",
       textConfirm: "Supprimer",
       textCancel: "Annuler",
-      confirm: () {
+      onConfirm: () async {
         controller.documents.remove(document);
-        Get.back(); // Close dialog
-        Get.back(); // Go back to previous page
+        Get.back(); // ferme le dialog
+        Get.back(); // revient à la liste
         Get.snackbar('Succès', 'Document supprimé avec succès');
       },
-      cancel: () => Get.back(),
+      onCancel: () => Get.back(),
       barrierDismissible: true,
     );
   }
