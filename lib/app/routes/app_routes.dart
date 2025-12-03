@@ -19,4 +19,6 @@ abstract class Routes {
   static const PRODUCTS = '/products';
   // ignore: constant_identifier_names
   static const TEMPLATES = '/templates';
+  // ignore: constant_identifier_names
+  static const DOCUMENTS = '/documents';
 }

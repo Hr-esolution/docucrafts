@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/home_controller.dart';
 import 'dart:ui';
+import 'package:share_plus/share_plus.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -131,6 +132,29 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Get.toNamed('/documents'),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.arrow_forward_ios, size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Voir tous les documents',
+                            style: TextStyle(
+                              color: Colors.blue[600],
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 Obx(() {
                   if (controller.documents.isEmpty) {
                     return Center(
@@ -167,7 +191,7 @@ class HomePage extends StatelessWidget {
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.documents.length,
+                    itemCount: controller.documents.length > 4 ? 4 : controller.documents.length, // Afficher seulement les 4 premiers documents
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
@@ -177,13 +201,10 @@ class HomePage extends StatelessWidget {
                       final document = controller.documents[index];
                       return _buildDocumentCard(
                         title: document.title,
-                        icon: Icons.insert_drive_file,
-                        color: Colors.grey,
+                        icon: _getDocumentIcon(document.type),
+                        color: _getDocumentColor(document.type),
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Document: ${document.title}')),
-                          );
+                          _showDocumentDetails(document, context);
                         },
                       );
                     },
@@ -438,6 +459,176 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  IconData _getDocumentIcon(String type) {
+    switch (type) {
+      case 'invoice':
+        return Icons.receipt;
+      case 'quote':
+        return Icons.description;
+      case 'delivery':
+        return Icons.local_shipping;
+      case 'business_card':
+        return Icons.card_membership;
+      case 'cv':
+        return Icons.person;
+      default:
+        return Icons.insert_drive_file;
+    }
+  }
+
+  Color _getDocumentColor(String type) {
+    switch (type) {
+      case 'invoice':
+        return Colors.blue;
+      case 'quote':
+        return Colors.green;
+      case 'delivery':
+        return Colors.orange;
+      case 'business_card':
+        return Colors.purple;
+      case 'cv':
+        return Colors.teal;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  void _showDocumentDetails(dynamic document, BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  document.title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Get.back(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Type: ${_getDocumentTypeName(document.type)}',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Créé le: ${_formatDate(document.createdAt)}',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => _shareDocument(document),
+                  icon: const Icon(Icons.share, size: 18),
+                  label: const Text('Partager'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => _deleteDocument(document),
+                  icon: const Icon(Icons.delete, size: 18),
+                  label: const Text('Supprimer'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getDocumentTypeName(String type) {
+    switch (type) {
+      case 'invoice':
+        return 'Facture';
+      case 'quote':
+        return 'Devis';
+      case 'delivery':
+        return 'Bon de Livraison';
+      case 'business_card':
+        return 'Carte de Visite';
+      case 'cv':
+        return 'CV';
+      default:
+        return 'Document';
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  Future<void> _shareDocument(dynamic document) async {
+    try {
+      String content = '''
+Document: ${document.title}
+Type: ${_getDocumentTypeName(document.type)}
+Créé le: ${_formatDate(document.createdAt)}
+
+Détails:
+''';
+      
+      for (var field in document.fields) {
+        if (field.value.isNotEmpty) {
+          content += '${field.label}: ${field.value}\n';
+        }
+      }
+
+      await Get.back(); // Fermer le bottom sheet
+      await Share.share(content, subject: 'Document - ${document.title}');
+    } catch (e) {
+      Get.snackbar('Erreur', 'Impossible de partager le document: $e');
+    }
+  }
+
+  Future<void> _deleteDocument(dynamic document) async {
+    Get.back(); // Fermer le bottom sheet
+    Get.defaultDialog(
+      title: "Confirmer la suppression",
+      middleText: "Voulez-vous vraiment supprimer le document \"${document.title}\" ?",
+      textConfirm: "Supprimer",
+      textCancel: "Annuler",
+      confirm: () async {
+        final HomeController controller = Get.find<HomeController>();
+        await controller.deleteDocument(document.id);
+        Get.back();
+        Get.snackbar('Succès', 'Document supprimé avec succès');
+      },
+      cancel: () => Get.back(),
+      barrierDismissible: true,
     );
   }
 }
