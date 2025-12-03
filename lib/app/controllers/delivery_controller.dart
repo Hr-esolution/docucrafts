@@ -2,17 +2,132 @@ import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
 import '../models/product.dart';
 import '../repositories/storage_repository.dart';
+import '../controllers/template_controller.dart';
 
 class DeliveryController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
   final RxList<DocumentField> fields = <DocumentField>[].obs;
   final RxList<Product> products = <Product>[].obs;
   final RxString title = "Nouveau Bon de Livraison".obs;
+  final TemplateController _templateController = Get.find<TemplateController>();
 
   @override
   void onInit() {
     super.onInit();
-    _initializeFields();
+    _initializeFieldsWithTemplate();
+  }
+
+  void _initializeFieldsWithTemplate() {
+    // Try to get the selected template for delivery notes
+    final deliveryTemplates = _templateController.getTemplatesByCategory('delivery');
+    if (deliveryTemplates.isNotEmpty) {
+      // Use the first available template
+      final template = deliveryTemplates.first;
+      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+        id: fieldMap['id'] ?? '',
+        label: fieldMap['label'] ?? '',
+        value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
+        type: _stringToFieldType(fieldMap['type'] ?? 'text'),
+        isRequired: fieldMap['isRequired'] ?? false,
+        isEnabled: fieldMap['isEnabled'] ?? true,
+      )).toList());
+    } else {
+      // Fallback to default fields if no template is available
+      _initializeDefaultFields();
+    }
+  }
+
+  void _initializeDefaultFields() {
+    fields.assignAll([
+      DocumentField(
+        id: 'delivery_number',
+        label: 'Numéro du bon',
+        value: '',
+        type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'date',
+        label: 'Date',
+        value: DateTime.now().toString().split(' ')[0],
+        type: FieldType.date,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'client_name',
+        label: 'Nom du client',
+        value: '',
+        type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'client_address',
+        label: 'Adresse du client',
+        value: '',
+        type: FieldType.text,
+        isRequired: true,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'delivery_address',
+        label: 'Adresse de livraison',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'items',
+        label: 'Désignation des articles',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'quantity',
+        label: 'Quantité',
+        value: '',
+        type: FieldType.number,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'carrier',
+        label: 'Transporteur',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
+        id: 'signature_required',
+        label: 'Signature requise',
+        value: 'Non',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+    ]);
+  }
+
+  FieldType _stringToFieldType(String type) {
+    switch (type) {
+      case 'number':
+        return FieldType.number;
+      case 'date':
+        return FieldType.date;
+      case 'email':
+        return FieldType.email;
+      case 'phone':
+        return FieldType.phone;
+      case 'text':
+      default:
+        return FieldType.text;
+    }
   }
 
   // Product management methods
@@ -41,68 +156,6 @@ class DeliveryController extends GetxController {
 
   List<Product> getProducts() {
     return products.toList();
-  }
-
-  void _initializeFields() {
-    fields.assignAll([
-      DocumentField(
-        id: 'delivery_number',
-        label: 'Numéro du bon',
-        value: '',
-        type: FieldType.text,
-        isRequired: true,
-      ),
-      DocumentField(
-        id: 'date',
-        label: 'Date',
-        value: DateTime.now().toString().split(' ')[0],
-        type: FieldType.date,
-        isRequired: true,
-      ),
-      DocumentField(
-        id: 'client_name',
-        label: 'Nom du client',
-        value: '',
-        type: FieldType.text,
-        isRequired: true,
-      ),
-      DocumentField(
-        id: 'client_address',
-        label: 'Adresse du client',
-        value: '',
-        type: FieldType.text,
-      ),
-      DocumentField(
-        id: 'delivery_address',
-        label: 'Adresse de livraison',
-        value: '',
-        type: FieldType.text,
-      ),
-      DocumentField(
-        id: 'items',
-        label: 'Désignation des articles',
-        value: '',
-        type: FieldType.text,
-      ),
-      DocumentField(
-        id: 'quantity',
-        label: 'Quantité',
-        value: '',
-        type: FieldType.number,
-      ),
-      DocumentField(
-        id: 'carrier',
-        label: 'Transporteur',
-        value: '',
-        type: FieldType.text,
-      ),
-      DocumentField(
-        id: 'signature_required',
-        label: 'Signature requise',
-        value: 'Non',
-        type: FieldType.text,
-      ),
-    ]);
   }
 
   void updateFieldValue(String fieldId, String newValue) {

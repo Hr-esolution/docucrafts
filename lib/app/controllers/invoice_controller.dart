@@ -4,48 +4,42 @@ import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 import '../pages/invoice/invoice_pdf.dart' as invoice_pdf;
 import 'dart:math';
+import '../controllers/template_controller.dart';
 
 class InvoiceController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
   final RxList<DocumentField> fields = <DocumentField>[].obs;
   final RxList<Product> products = <Product>[].obs;
   final RxString title = "Nouvelle Facture".obs;
+  final TemplateController _templateController = Get.find<TemplateController>();
 
   @override
   void onInit() {
     super.onInit();
-    _initializeFields();
+    _initializeFieldsWithTemplate();
   }
 
-  // Product management methods
-  void addProduct(Product product) {
-    products.add(product);
-    update();
-  }
-
-  void removeProduct(Product product) {
-    products.removeWhere((p) => p.id == product.id);
-    update();
-  }
-
-  void updateProduct(Product updatedProduct) {
-    final index = products.indexWhere((p) => p.id == updatedProduct.id);
-    if (index != -1) {
-      products[index] = updatedProduct;
-      update();
+  void _initializeFieldsWithTemplate() {
+    // Try to get the selected template for invoices
+    final invoiceTemplates = _templateController.getTemplatesByCategory('invoice');
+    if (invoiceTemplates.isNotEmpty) {
+      // Use the first available template
+      final template = invoiceTemplates.first;
+      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+        id: fieldMap['id'] ?? '',
+        label: fieldMap['label'] ?? '',
+        value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
+        type: _stringToFieldType(fieldMap['type'] ?? 'text'),
+        isRequired: fieldMap['isRequired'] ?? false,
+        isEnabled: fieldMap['isEnabled'] ?? true,
+      )).toList());
+    } else {
+      // Fallback to default fields if no template is available
+      _initializeDefaultFields();
     }
   }
 
-  void clearProducts() {
-    products.clear();
-    update();
-  }
-
-  List<Product> getProducts() {
-    return products.toList();
-  }
-
-  void _initializeFields() {
+  void _initializeDefaultFields() {
     fields.assignAll([
       // Champs obligatoires pour la mention explicite
       DocumentField(
@@ -232,6 +226,50 @@ class InvoiceController extends GetxController {
         isEnabled: true,
       ),
     ]);
+  }
+
+  FieldType _stringToFieldType(String type) {
+    switch (type) {
+      case 'number':
+        return FieldType.number;
+      case 'date':
+        return FieldType.date;
+      case 'email':
+        return FieldType.email;
+      case 'phone':
+        return FieldType.phone;
+      case 'text':
+      default:
+        return FieldType.text;
+    }
+  }
+
+  // Product management methods
+  void addProduct(Product product) {
+    products.add(product);
+    update();
+  }
+
+  void removeProduct(Product product) {
+    products.removeWhere((p) => p.id == product.id);
+    update();
+  }
+
+  void updateProduct(Product updatedProduct) {
+    final index = products.indexWhere((p) => p.id == updatedProduct.id);
+    if (index != -1) {
+      products[index] = updatedProduct;
+      update();
+    }
+  }
+
+  void clearProducts() {
+    products.clear();
+    update();
+  }
+
+  List<Product> getProducts() {
+    return products.toList();
   }
 
   void updateFieldValue(String fieldId, String newValue) {

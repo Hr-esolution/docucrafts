@@ -17,11 +17,9 @@ class TemplateSelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TemplateController templateController = Get.find<TemplateController>();
-    
+
     // Load templates if not already loaded
-    if (templateController.templates.isEmpty) {
-      templateController.loadTemplates();
-    }
+    templateController.loadTemplates();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -81,6 +79,11 @@ class TemplateSelectionPage extends StatelessWidget {
                           const SizedBox(height: 8),
                           ElevatedButton(
                             onPressed: () => templateController.addDefaultTemplates(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            ),
                             child: const Text('Add Default Templates'),
                           ),
                         ],

@@ -1,47 +1,101 @@
 ```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
+
 # Dependencies
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+*.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Build outputs
+dist/
+build/
+target/
+*.tar
+*.tar.gz
+*.zip
+*.gz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
+
+# Dart/Flutter specific
 .dart_tool/
 .packages
 .pub/
-pubspec.lock
-
-# Build
 build/
-**/ios/Flutter/.last_build_id
+*.g.dart
+*.freezed.dart
 
-# Generated plugin code
-flutter/
-packages/
+# Gradle
+.gradle/
+build/
 
-# Coverage
-coverage/
-
-# Files that end with tilde should be ignored; it indicates a temporary file
+# Temporary files
+*.tmp
 *~
-
-# Log files
-*.log
-
-# iOS
-**/ios/Pods/
-**/ios/.symlinks/
-**/ios/Flutter/.last_build_id
-
-# Android
-**/android/**/gradle-wrapper.properties
-**/android/cmake_build/
-**/android/.gradle/
-**/android/gradle/
-**/android/build/
-**/android/app/build/
-
-# Web
-**/web/.dart_tool/
-**/web/build/
-
-# macOS
+*.bak
+*.swp
+*.swo
 .DS_Store
-
-# Windows
 Thumbs.db
 ```
