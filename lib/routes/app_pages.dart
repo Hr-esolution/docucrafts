@@ -10,6 +10,7 @@ import '../app/bindings/business_card_binding.dart';
 import '../app/bindings/cv_binding.dart';
 import '../app/bindings/settings_binding.dart';
 import '../app/bindings/template_binding.dart';
+import '../app/bindings/product_binding.dart';
 import '../app/pages/home/home_page.dart';
 import '../app/pages/invoice/invoice_form_page.dart';
 import '../app/pages/quote/quote_form_page.dart';
@@ -18,11 +19,17 @@ import '../app/pages/business_card/business_card_form.dart';
 import '../app/pages/cv/cv_form_page.dart';
 import '../app/pages/settings/field_settings_page.dart';
 import '../app/pages/template_selection_page.dart';
+import '../app/pages/splash_page.dart'; // Added splash page import
+import '../app/pages/products.dart'; // Added products page import
 
 abstract class AppPages {
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = '/splash'; // Changed to splash as initial route
 
   static final routes = [
+    GetPage(
+      name: Routes.SPLASH,
+      page: () => const SplashPage(),
+    ),
     GetPage(
       name: Routes.HOME,
       page: () => const HomePage(),
@@ -57,6 +64,11 @@ abstract class AppPages {
       name: Routes.SETTINGS,
       page: () => const FieldSettingsPage(),
       binding: SettingsBinding(),
+    ),
+    GetPage(
+      name: Routes.PRODUCTS,
+      page: () => const ProductsPage(),
+      binding: ProductBinding(),
     ),
     GetPage(
       name: '${Routes.TEMPLATES}/:type',

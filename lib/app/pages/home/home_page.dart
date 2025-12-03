@@ -43,9 +43,21 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 60),
-                // Templates Section
+                // Welcome Section
                 const Text(
-                  'Templates',
+                  'Bienvenue sur DocuCrafts',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Créez vos documents professionnels en toute simplicité',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                const SizedBox(height: 30),
+                
+                // Document Types Section
+                const Text(
+                  'Types de Documents',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
@@ -78,8 +90,7 @@ class HomePage extends StatelessWidget {
                       title: 'Carte de Visite',
                       icon: Icons.card_membership,
                       color: Colors.purple,
-                      onTap: () =>
-                          controller.navigateToDocument('business_card'),
+                      onTap: () => controller.navigateToDocument('business_card'),
                     ),
                     _buildTemplateCard(
                       title: 'CV',
@@ -88,6 +99,29 @@ class HomePage extends StatelessWidget {
                       onTap: () => controller.navigateToDocument('cv'),
                     ),
                   ],
+                ),
+                const SizedBox(height: 30),
+
+                // Settings Section
+                const Text(
+                  'Paramètres',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                _buildSettingsCard(
+                  title: 'Gestion Produits',
+                  subtitle: 'Ajouter, modifier ou supprimer vos produits',
+                  icon: Icons.inventory,
+                  color: Colors.amber,
+                  onTap: () => Get.toNamed('/products'),
+                ),
+                const SizedBox(height: 16),
+                _buildSettingsCard(
+                  title: 'Configuration Documents',
+                  subtitle: 'Personnaliser les champs et modèles',
+                  icon: Icons.settings_applications,
+                  color: Colors.indigo,
+                  onTap: () => Get.toNamed('/settings'),
                 ),
                 const SizedBox(height: 30),
 
@@ -134,8 +168,7 @@ class HomePage extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: controller.documents.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
@@ -229,6 +262,100 @@ class HomePage extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withOpacity(0.5),
+                  Colors.white.withOpacity(0.1),
+                ],
+              ),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          color.withOpacity(0.3),
+                          color.withOpacity(0.1),
+                        ],
+                      ),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: color.withOpacity(0.4),
+                        width: 1,
+                      ),
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 25,
+                      color: color,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Colors.grey[600],
                   ),
                 ],
               ),

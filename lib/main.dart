@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'PDF Customizer App',
       debugShowCheckedModeBanner: false,
-      initialRoute: AppPages.INITIAL,
+      initialRoute: '/splash', // Changed to splash page
       getPages: AppPages.routes,
     );
   }
