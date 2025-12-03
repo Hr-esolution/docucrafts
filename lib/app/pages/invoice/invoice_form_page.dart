@@ -26,6 +26,10 @@ class InvoiceFormPage extends StatelessWidget {
             },
           ),
           IconButton(
+            icon: const Icon(Icons.visibility),
+            onPressed: () => controller.navigateToPreview(),
+          ),
+          IconButton(
             icon: const Icon(Icons.picture_as_pdf),
             onPressed: () => controller.generateInvoicePdf(),
           ),

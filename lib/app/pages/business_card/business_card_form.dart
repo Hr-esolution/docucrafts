@@ -16,6 +16,10 @@ class BusinessCardForm extends StatelessWidget {
         title: const Text('Créer une Carte de Visite'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.visibility),
+            onPressed: () => controller.navigateToPreview(),
+          ),
+          IconButton(
             icon: const Icon(Icons.save),
             onPressed: () => controller.saveBusinessCard(),
           ),

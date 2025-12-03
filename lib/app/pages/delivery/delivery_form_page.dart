@@ -15,6 +15,10 @@ class DeliveryFormPage extends StatelessWidget {
         title: const Text('Créer un Bon de Livraison'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.visibility),
+            onPressed: () => controller.navigateToPreview(),
+          ),
+          IconButton(
             icon: const Icon(Icons.save),
             onPressed: () => controller.saveDelivery(),
           ),

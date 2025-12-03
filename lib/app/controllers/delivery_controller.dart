@@ -3,6 +3,9 @@ import '../models/dynamic_document_model.dart';
 import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 import '../controllers/template_controller.dart';
+import '../pages/delivery/previews/delivery_pdf_minimal_preview.dart';
+import '../pages/delivery/previews/delivery_pdf_multi_preview.dart';
+import '../pages/delivery/previews/delivery_pdf_premium_preview.dart';
 
 class DeliveryController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
@@ -19,11 +22,11 @@ class DeliveryController extends GetxController {
 
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for delivery notes
-    final deliveryTemplates = _templateController.getTemplatesByCategory('delivery');
-    if (deliveryTemplates.isNotEmpty) {
-      // Use the first available template
-      final template = deliveryTemplates.first;
-      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    if (selectedTemplate != null && selectedTemplate.category == 'delivery') {
+      // Use the selected template
+      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
         id: fieldMap['id'] ?? '',
         label: fieldMap['label'] ?? '',
         value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
@@ -203,6 +206,38 @@ class DeliveryController extends GetxController {
       Get.snackbar('Succès', 'Bon de livraison enregistré avec succès');
     } catch (e) {
       Get.snackbar('Erreur', 'Échec de l\'enregistrement du bon de livraison: $e');
+    }
+  }
+
+  void navigateToPreview() {
+    // Récupérer les données du formulaire
+    final Map<String, dynamic> data = {};
+    for (final field in fields) {
+      data[field.id] = field.value;
+    }
+    
+    // Récupérer le template sélectionné
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    // Rediriger vers la page d'aperçu appropriée en fonction du template
+    if (selectedTemplate != null && selectedTemplate.category == 'delivery') {
+      switch (selectedTemplate.id) {
+        case 'delivery_minimal':
+          Get.to(() => MinimalDeliveryPreview(data: data));
+          break;
+        case 'delivery_multi_column':
+          Get.to(() => MultiColumnDeliveryPreview(data: data));
+          break;
+        case 'delivery_premium':
+          Get.to(() => PremiumDeliveryPreview(data: data));
+          break;
+        default:
+          Get.to(() => MinimalDeliveryPreview(data: data));
+          break;
+      }
+    } else {
+      // Si aucun template n'est sélectionné, utiliser le template minimal par défaut
+      Get.to(() => MinimalDeliveryPreview(data: data));
     }
   }
 }

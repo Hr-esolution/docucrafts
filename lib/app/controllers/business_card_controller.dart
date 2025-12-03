@@ -1,11 +1,16 @@
 import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
 import '../repositories/storage_repository.dart';
+import '../controllers/template_controller.dart';
+import '../pages/business_card/previews/business_card_pdf_minimal_preview.dart';
+import '../pages/business_card/previews/business_card_pdf_modern_preview.dart';
+import '../pages/business_card/previews/business_card_pdf_professional_preview.dart';
 
 class BusinessCardController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
   final RxList<DocumentField> fields = <DocumentField>[].obs;
   final RxString title = "Nouvelle Carte de Visite".obs;
+  final TemplateController _templateController = Get.find<TemplateController>();
 
   @override
   void onInit() {

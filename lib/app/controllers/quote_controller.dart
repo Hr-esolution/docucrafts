@@ -3,6 +3,9 @@ import '../models/dynamic_document_model.dart';
 import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 import '../controllers/template_controller.dart';
+import '../pages/quote/previews/quote_pdf_minimal_preview.dart';
+import '../pages/quote/previews/quote_pdf_multi_preview.dart';
+import '../pages/quote/previews/quote_pdf_premium_preview.dart';
 
 class QuoteController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
@@ -203,6 +206,38 @@ class QuoteController extends GetxController {
       Get.snackbar('Succès', 'Devis enregistré avec succès');
     } catch (e) {
       Get.snackbar('Erreur', 'Échec de l\'enregistrement du devis: $e');
+    }
+  }
+
+  void navigateToPreview() {
+    // Récupérer les données du formulaire
+    final Map<String, dynamic> data = {};
+    for (final field in fields) {
+      data[field.id] = field.value;
+    }
+    
+    // Récupérer le template sélectionné
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    // Rediriger vers la page d'aperçu appropriée en fonction du template
+    if (selectedTemplate != null && selectedTemplate.category == 'quote') {
+      switch (selectedTemplate.id) {
+        case 'quote_minimal':
+          Get.to(() => MinimalQuotePreview(data: data));
+          break;
+        case 'quote_multi_column':
+          Get.to(() => MultiColumnQuotePreview(data: data));
+          break;
+        case 'quote_premium':
+          Get.to(() => PremiumQuotePreview(data: data));
+          break;
+        default:
+          Get.to(() => MinimalQuotePreview(data: data));
+          break;
+      }
+    } else {
+      // Si aucun template n'est sélectionné, utiliser le template minimal par défaut
+      Get.to(() => MinimalQuotePreview(data: data));
     }
   }
 }
