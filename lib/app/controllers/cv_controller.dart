@@ -1,19 +1,41 @@
 import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
 import '../repositories/storage_repository.dart';
+import '../controllers/template_controller.dart';
 
 class CvController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
   final RxList<DocumentField> fields = <DocumentField>[].obs;
   final RxString title = "Nouveau CV".obs;
+  final TemplateController _templateController = Get.find<TemplateController>();
 
   @override
   void onInit() {
     super.onInit();
-    _initializeFields();
+    _initializeFieldsWithTemplate();
   }
 
-  void _initializeFields() {
+  void _initializeFieldsWithTemplate() {
+    // Try to get the selected template for CVs
+    final cvTemplates = _templateController.getTemplatesByCategory('cv');
+    if (cvTemplates.isNotEmpty) {
+      // Use the first available template
+      final template = cvTemplates.first;
+      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+        id: fieldMap['id'] ?? '',
+        label: fieldMap['label'] ?? '',
+        value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
+        type: _stringToFieldType(fieldMap['type'] ?? 'text'),
+        isRequired: fieldMap['isRequired'] ?? false,
+        isEnabled: fieldMap['isEnabled'] ?? true,
+      )).toList());
+    } else {
+      // Fallback to default fields if no template is available
+      _initializeDefaultFields();
+    }
+  }
+
+  void _initializeDefaultFields() {
     fields.assignAll([
       DocumentField(
         id: 'full_name',
@@ -21,6 +43,7 @@ class CvController extends GetxController {
         value: '',
         type: FieldType.text,
         isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'job_title',
@@ -28,50 +51,81 @@ class CvController extends GetxController {
         value: '',
         type: FieldType.text,
         isRequired: true,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'phone',
         label: 'Téléphone',
         value: '',
         type: FieldType.phone,
+        isRequired: false,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'email',
         label: 'Email',
         value: '',
         type: FieldType.email,
+        isRequired: false,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'address',
         label: 'Adresse',
         value: '',
         type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'summary',
         label: 'Résumé professionnel',
         value: '',
         type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'experience',
         label: 'Expérience professionnelle',
         value: '',
         type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'education',
         label: 'Formation',
         value: '',
         type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
       ),
       DocumentField(
         id: 'skills',
         label: 'Compétences',
         value: '',
         type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
       ),
     ]);
+  }
+
+  FieldType _stringToFieldType(String type) {
+    switch (type) {
+      case 'number':
+        return FieldType.number;
+      case 'date':
+        return FieldType.date;
+      case 'email':
+        return FieldType.email;
+      case 'phone':
+        return FieldType.phone;
+      case 'text':
+      default:
+        return FieldType.text;
+    }
   }
 
   void updateFieldValue(String fieldId, String newValue) {

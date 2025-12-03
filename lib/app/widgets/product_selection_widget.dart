@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/product_controller.dart';
 import '../models/product.dart';
 
-class ProductSelectionWidget extends StatelessWidget {
+class ProductSelectionWidget extends StatefulWidget {
   final List<Product> selectedProducts;
   final Function(Product) onAddProduct;
   final Function(Product) onRemoveProduct;
@@ -20,6 +20,22 @@ class ProductSelectionWidget extends StatelessWidget {
     this.showManualEntry = true,
     this.onAddMultipleProducts,
   });
+
+  @override
+  State<ProductSelectionWidget> createState() => _ProductSelectionWidgetState();
+}
+
+class _ProductSelectionWidgetState extends State<ProductSelectionWidget> {
+  final Map<String, TextEditingController> _quantityControllers = {};
+  final Map<String, TextEditingController> _priceControllers = {};
+
+  @override
+  void dispose() {
+    // Dispose all controllers when the widget is disposed
+    _quantityControllers.values.forEach((controller) => controller.dispose());
+    _priceControllers.values.forEach((controller) => controller.dispose());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +71,12 @@ class ProductSelectionWidget extends StatelessWidget {
                       return DropdownMenuItem(
                         value: product,
                         child: Text(
-                            '${product.name} - \$${product.price} (${product.unit})'),
+                            '${product.name} - \\$${product.price} (${product.unit})'),
                       );
                     }).toList(),
                     onChanged: (Product? selectedProduct) {
                       if (selectedProduct != null) {
-                        onAddProduct(selectedProduct);
+                        widget.onAddProduct(selectedProduct);
                       }
                     },
                   ),
@@ -75,7 +91,7 @@ class ProductSelectionWidget extends StatelessWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  _showProductSelectionDialog(context, onAddProduct);
+                  _showProductSelectionDialog(context, widget.onAddProduct);
                 },
                 icon: const Icon(Icons.add_box),
                 label: const Text('Add Multiple Products'),
@@ -86,11 +102,11 @@ class ProductSelectionWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            if (showManualEntry)
+            if (widget.showManualEntry)
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    _showManualProductDialog(context, onAddProduct);
+                    _showManualProductDialog(context, widget.onAddProduct);
                   },
                   icon: const Icon(Icons.add),
                   label: const Text('Add Manual Product'),
@@ -105,7 +121,7 @@ class ProductSelectionWidget extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Selected products list
-        if (selectedProducts.isNotEmpty) ...[
+        if (widget.selectedProducts.isNotEmpty) ...[
           const Text(
             'Selected Products',
             style: TextStyle(
@@ -114,11 +130,11 @@ class ProductSelectionWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          ...selectedProducts.asMap().entries.map((entry) {
+          ...widget.selectedProducts.asMap().entries.map((entry) {
             int index = entry.key;
             Product product = entry.value;
             return _buildProductItem(
-                product, index, onRemoveProduct, onProductUpdated);
+                product, index, widget.onRemoveProduct, widget.onProductUpdated);
           }),
         ],
       ],
@@ -131,9 +147,16 @@ class ProductSelectionWidget extends StatelessWidget {
     Function(Product) onRemoveProduct,
     Function(Product) onProductUpdated,
   ) {
-    final quantityController = TextEditingController(text: '1');
-    final priceController =
-        TextEditingController(text: product.price.toString());
+    // Create controllers if they don't exist for this product
+    if (!_quantityControllers.containsKey(product.id)) {
+      _quantityControllers[product.id] = TextEditingController(text: '1');
+    }
+    if (!_priceControllers.containsKey(product.id)) {
+      _priceControllers[product.id] = TextEditingController(text: product.price.toString());
+    }
+
+    final quantityController = _quantityControllers[product.id]!;
+    final priceController = _priceControllers[product.id]!;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -175,7 +198,12 @@ class ProductSelectionWidget extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => onRemoveProduct(product),
+                  onPressed: () {
+                    // Remove controllers when product is removed
+                    _quantityControllers.remove(product.id)?.dispose();
+                    _priceControllers.remove(product.id)?.dispose();
+                    onRemoveProduct(product);
+                  },
                 ),
               ],
             ),
@@ -364,7 +392,7 @@ class ProductSelectionWidget extends StatelessWidget {
                       final product = productController.products[index];
                       return CheckboxListTile(
                         title: Text(product.name),
-                        subtitle: Text('${product.description} - \$${product.price} (${product.unit})'),
+                        subtitle: Text('${product.description} - \\$${product.price} (${product.unit})'),
                         value: selectedProductIds.contains(product.id),
                         onChanged: (bool? value) {
                           if (value == true) {
