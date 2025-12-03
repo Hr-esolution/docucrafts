@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import '../repositories/storage_repository.dart';
-import '../models/dynamic_document_model.dart';
-import '../controllers/template_controller.dart';
+import '../../app/repositories/storage_repository.dart';
+import '../../app/models/dynamic_document_model.dart';
+import '../../app/controllers/template_controller.dart';
 
 class HomeController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
@@ -19,6 +19,15 @@ class HomeController extends GetxController {
       documents.assignAll(docs);
     } catch (e) {
       print('Error loading documents: $e');
+    }
+  }
+
+  Future<void> deleteDocument(String id) async {
+    try {
+      await _storageRepository.deleteDocument(id);
+      documents.removeWhere((doc) => doc.id == id);
+    } catch (e) {
+      print('Error deleting document: $e');
     }
   }
 

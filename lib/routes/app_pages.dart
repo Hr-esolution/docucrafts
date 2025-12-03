@@ -21,6 +21,7 @@ import '../app/pages/settings/field_settings_page.dart';
 import '../app/pages/template_selection_page.dart';
 import '../app/pages/splash_page.dart'; // Added splash page import
 import '../app/pages/products.dart'; // Added products page import
+import '../app/pages/documents_list_page.dart'; // Added documents list page import
 
 abstract class AppPages {
   static const INITIAL = '/splash'; // Changed to splash as initial route
@@ -97,6 +98,10 @@ abstract class AppPages {
         },
       ),
       binding: TemplateBinding(),
+    ),
+    GetPage(
+      name: Routes.DOCUMENTS,
+      page: () => const DocumentsListPage(),
     ),
   ];
 }

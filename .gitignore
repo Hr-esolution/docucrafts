@@ -3,48 +3,18 @@
 .dart_tool/
 .packages
 .pub/
-pubspec.lock
-
-# Build
 build/
-**/ios/Flutter/.last_build_id
-
-# Generated plugin code
-flutter/.pub-cache/
-
-# Android
-**/android/**/gradle-wrapper.properties
-**/android/.gradle
-**/android/local.properties
-**/android/key.properties
-
-# iOS
-**/ios/**/build/
-**/ios/.symlinks/
-**/ios/Flutter/.last_build_id
-**/ios/Pods/
-**/ios/Podfile.lock
-
-# Logs
-*.log
-**/logs/
-
-# VS Code
-.vscode/
-
-# IntelliJ
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Temp files
-*.tmp
-*.swp
-*~
 
 # Environment
 .env
 .env.local
 .env.*
+
+# Logs
+*.log
+**/logs
+
+# OS generated files
+.DS_Store
+Thumbs.db
 ```

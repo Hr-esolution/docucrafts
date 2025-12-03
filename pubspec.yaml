@@ -19,6 +19,7 @@ dependencies:
   image: ^4.0.17
   path: ^1.9.1
   shared_preferences: ^2.2.2
+  share_plus: ^7.2.1
 
 dev_dependencies:
   flutter_test:
