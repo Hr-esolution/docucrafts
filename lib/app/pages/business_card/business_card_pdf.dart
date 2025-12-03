@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart' as pdf;
+import 'package:pdf/widgets.dart' show PdfColor;
 
 Future<Uint8List> generateBusinessCardPdf({
   required String fullName,
@@ -42,7 +43,7 @@ Future<Uint8List> generateBusinessCardPdf({
                   jobTitle,
                   style: const pw.TextStyle(
                     fontSize: 12,
-                    color: pdf.PdfColors.grey700,
+                    color: PdfColor.fromHex('#616161'),
                   ),
                 ),
                 pw.SizedBox(height: 10),

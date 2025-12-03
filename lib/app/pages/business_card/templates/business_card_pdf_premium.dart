@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart' as pdf;
+import 'package:pdf/widgets.dart' show PdfColor;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
@@ -21,12 +22,12 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
             height: 55 * pdf.PdfPageMetrics.mm,
             decoration: pw.BoxDecoration(
               border: pw.BoxBorder.all(
-                color: pdf.PdfColors.grey,
+                color: PdfColor.fromHex('#9E9E9E'),
               ),
               gradient: pw.BoxGradient.linear(
                 pw.Point(0, 0),
                 pw.Point(85 * pdf.PdfPageMetrics.mm, 55 * pdf.PdfPageMetrics.mm),
-                [pw.PdfColors.grey300, pw.PdfColors.grey100],
+                [PdfColor.fromHex('#E0E0E0'), PdfColor.fromHex('#F5F5F5')],
               ),
             ),
             child: pw.Padding(
@@ -39,7 +40,7 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
                       style: pw.TextStyle(
                           fontSize: 12,
                           fontWeight: pw.FontWeight.bold,
-                          color: pdf.PdfColors.grey)),
+                          color: PdfColor.fromHex('#9E9E9E')),
                   pw.SizedBox(height: 5),
                   pw.Text(data["name"] ?? "",
                       style: pw.TextStyle(
@@ -51,7 +52,7 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
                   pw.SizedBox(height: 10),
                   pw.Divider(
                     thickness: 0.5,
-                    color: pdf.PdfColors.grey,
+                    color: PdfColor.fromHex('#9E9E9E'),
                   ),
                   pw.SizedBox(height: 10),
                   pw.Row(
