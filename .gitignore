@@ -1,14 +1,19 @@
 ```
-# Flutter/Dart
+# Flutter/Dart specific
 .dart_tool/
 .build/
-packages/
-*.iws
-*.swo
-*.swp
-*~
-.DS_Store
-Thumbs.db
+.packages
+.pub/
+*.i*lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.o
+*.obj
+*.a
+*.lib
+*.out
 
 # Dependencies
 node_modules/
@@ -16,42 +21,34 @@ vendor/
 
 # Logs
 *.log
-*.tmp
+**/logs
 
 # Environment
 .env
 .env.local
-*.env.*
+.env.*
+.env.local.*
 
-# IDE
+# Editor/IDE
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
 
-# Build artifacts
+# Build outputs
 build/
 dist/
 target/
-*.o
-*.obj
-*.a
-*.lib
-*.so
-*.dll
-*.exe
-*.out
+out/
+bin/
 
-# Cache
-.cache/
-__pycache__/
-*.pyc
-.pytest_cache/
-.mypy_cache/
-.nyc_output/
+# Test coverage
 coverage/
 htmlcov/
+*.coverage
 
 # Compressed files
 *.zip

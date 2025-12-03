@@ -13,9 +13,9 @@ Future<Uint8List> generateBusinessCardPdf({
   required String linkedin,
   required String twitter,
 }) async {
-  final pdf = pw.Document();
+  final doc = pw.Document();
 
-  pdf.addPage(
+  doc.addPage(
     pw.Page(
       pageFormat: pdf.PdfPageFormat.a4,
       build: (pw.Context context) {
@@ -145,5 +145,5 @@ Future<Uint8List> generateBusinessCardPdf({
     ),
   );
 
-  return pdf.save();
+  return doc.save();
 }

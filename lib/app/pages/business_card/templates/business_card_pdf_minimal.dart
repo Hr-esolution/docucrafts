@@ -4,9 +4,9 @@ import 'package:pdf/pdf.dart' as pdf;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generateMinimalBusinessCardPdf(Map<String, dynamic> data) async {
-  final pdf = pw.Document();
+  final doc = pw.Document();
 
-  pdf.addPage(
+  doc.addPage(
     pw.Page(
       pageFormat: pdf.PdfPageFormat.a4.applyMargin(
         left: 2.0 * pdf.PdfPageMetrics.mm,
@@ -59,6 +59,6 @@ Future<File> generateMinimalBusinessCardPdf(Map<String, dynamic> data) async {
 
   final dir = await getTemporaryDirectory();
   final file = File("${dir.path}/business_card_minimal.pdf");
-  await file.writeAsBytes(await pdf.save());
+  await file.writeAsBytes(await doc.save());
   return file;
 }

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
+import 'package:pdf/pdf.dart' as pdf;
 
 Future<Uint8List> generateCvPdf({
   required String fullName,
@@ -13,16 +13,17 @@ Future<Uint8List> generateCvPdf({
   required String education,
   required String skills,
 }) async {
-  final pdf = pw.Document();
+  final doc = pw.Document();
 
-  pdf.addPage(
+  doc.addPage(
     pw.Page(
+      pageFormat: pdf.PdfPageFormat.a4,
       build: (pw.Context context) {
         return pw.Column(
           children: [
             // En-tête
             pw.Container(
-              color: PdfColors.grey300,
+              color: pdf.PdfColors.grey300,
               width: double.infinity,
               padding: const pw.EdgeInsets.all(20),
               child: pw.Column(
@@ -39,7 +40,7 @@ Future<Uint8List> generateCvPdf({
                     jobTitle,
                     style: const pw.TextStyle(
                       fontSize: 16,
-                      color: PdfColors.grey700,
+                      color: pdf.PdfColors.grey700,
                     ),
                   ),
                 ],
@@ -171,5 +172,5 @@ Future<Uint8List> generateCvPdf({
     ),
   );
 
-  return pdf.save();
+  return doc.save();
 }

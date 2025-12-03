@@ -34,7 +34,11 @@ class ProductController extends GetxController {
   }
 
   Product? getProductById(String id) {
-    return _products.firstWhere((p) => p.id == id, orElse: () => null);
+    try {
+      return _products.firstWhere((p) => p.id == id);
+    } catch (e) {
+      return null;
+    }
   }
 
   // Method to add a default set of products for demonstration

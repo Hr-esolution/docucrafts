@@ -1,30 +1,31 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart' as pdf;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
-  final pdf = pw.Document();
+  final doc = pw.Document();
 
-  pdf.addPage(
+  doc.addPage(
     pw.Page(
-      pageFormat: pw.PageFormat.a4.applyMargin(
-        left: 2.0 * pw.PdfPageMetrics.mm,
-        top: 2.0 * pw.PdfPageMetrics.mm,
-        right: 2.0 * pw.PdfPageMetrics.mm,
-        bottom: 2.0 * pw.PdfPageMetrics.mm,
+      pageFormat: pdf.PdfPageFormat.a4.applyMargin(
+        left: 2.0 * pdf.PdfPageMetrics.mm,
+        top: 2.0 * pdf.PdfPageMetrics.mm,
+        right: 2.0 * pdf.PdfPageMetrics.mm,
+        bottom: 2.0 * pdf.PdfPageMetrics.mm,
       ),
       build: (context) {
         return pw.Center(
           child: pw.Container(
-            width: 85 * pw.PdfPageMetrics.mm,
-            height: 55 * pw.PdfPageMetrics.mm,
+            width: 85 * pdf.PdfPageMetrics.mm,
+            height: 55 * pdf.PdfPageMetrics.mm,
             decoration: pw.BoxDecoration(
               border: pw.BoxBorder.all(
-                color: pw.PdfColors.grey,
+                color: pdf.PdfColors.grey,
               ),
               gradient: pw.BoxGradient.linear(
                 pw.Point(0, 0),
-                pw.Point(85 * pw.PdfPageMetrics.mm, 55 * pw.PdfPageMetrics.mm),
+                pw.Point(85 * pdf.PdfPageMetrics.mm, 55 * pdf.PdfPageMetrics.mm),
                 [pw.PdfColors.grey300, pw.PdfColors.grey100],
               ),
             ),
@@ -38,7 +39,7 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
                       style: pw.TextStyle(
                           fontSize: 12,
                           fontWeight: pw.FontWeight.bold,
-                          color: pw.PdfColors.grey)),
+                          color: pdf.PdfColors.grey)),
                   pw.SizedBox(height: 5),
                   pw.Text(data["name"] ?? "",
                       style: pw.TextStyle(
@@ -50,7 +51,7 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
                   pw.SizedBox(height: 10),
                   pw.Divider(
                     thickness: 0.5,
-                    color: pw.PdfColors.grey,
+                    color: pdf.PdfColors.grey,
                   ),
                   pw.SizedBox(height: 10),
                   pw.Row(
@@ -91,6 +92,6 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
 
   final dir = await getTemporaryDirectory();
   final file = File("${dir.path}/business_card_premium.pdf");
-  await file.writeAsBytes(await pdf.save());
+  await file.writeAsBytes(await doc.save());
   return file;
 }
