@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
-import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 
 class CvController extends GetxController {
@@ -114,7 +113,7 @@ class CvController extends GetxController {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
-    
+
     try {
       await _storageRepository.saveDocument(document);
       Get.snackbar('Succès', 'CV enregistré avec succès');

@@ -63,7 +63,7 @@ Future<File> generateMinimalDeliveryPdf(Map<String, dynamic> data) async {
             ),
             pw.SizedBox(height: 20),
             pw.Text("Signature du destinataire : ________________",
-                style: pw.TextStyle(fontSize: 12)),
+                style: const pw.TextStyle(fontSize: 12)),
           ],
         );
       },

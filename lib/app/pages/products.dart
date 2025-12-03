@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/product_controller.dart';
+import 'package:pdf_customizer_app/app/controllers/product_controller.dart';
+import 'package:pdf_customizer_app/app/models/product.dart';
 
 class ProductsPage extends StatelessWidget {
-  const ProductsPage({Key? key}) : super(key: key);
+  const ProductsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,8 @@ class ProductsPage extends StatelessWidget {
                     return Card(
                       child: ListTile(
                         title: Text(product.name),
-                        subtitle: Text('${product.description}\nPrice: \$${product.price} (${product.unit})'),
+                        subtitle: Text(
+                            '${product.description}\nPrice: \$${product.price} (${product.unit})'),
                         trailing: Text('Tax: ${product.taxRate}%'),
                       ),
                     );
@@ -62,7 +64,7 @@ class ProductsPage extends StatelessWidget {
 
 class AddEditProductPage extends StatefulWidget {
   final String? productId;
-  const AddEditProductPage({Key? key, this.productId}) : super(key: key);
+  const AddEditProductPage({super.key, this.productId});
 
   @override
   _AddEditProductPageState createState() => _AddEditProductPageState();
@@ -194,7 +196,9 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: Text(widget.productId != null ? 'Update Product' : 'Add Product'),
+                child: Text(widget.productId != null
+                    ? 'Update Product'
+                    : 'Add Product'),
               ),
             ],
           ),
@@ -206,7 +210,8 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
   void _saveProduct() {
     if (_formKey.currentState!.validate()) {
       final product = Product(
-        id: widget.productId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        id: widget.productId ??
+            DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text,
         description: _descriptionController.text,
         price: double.parse(_priceController.text),

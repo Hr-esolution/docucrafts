@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart' as pdf;
-import 'package:pdf/widgets.dart' show PdfColor;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generateMinimalBusinessCardPdf(Map<String, dynamic> data) async {
@@ -10,19 +9,19 @@ Future<File> generateMinimalBusinessCardPdf(Map<String, dynamic> data) async {
   doc.addPage(
     pw.Page(
       pageFormat: pdf.PdfPageFormat.a4.applyMargin(
-        left: 2.0 * pdf.PdfPageMetrics.mm,
-        top: 2.0 * pdf.PdfPageMetrics.mm,
-        right: 2.0 * pdf.PdfPageMetrics.mm,
-        bottom: 2.0 * pdf.PdfPageMetrics.mm,
+        left: 2.0 * pdf.PdfPageFormat.mm,
+        top: 2.0 * pdf.PdfPageFormat.mm,
+        right: 2.0 * pdf.PdfPageFormat.mm,
+        bottom: 2.0 * pdf.PdfPageFormat.mm,
       ),
       build: (context) {
         return pw.Center(
           child: pw.Container(
-            width: 85 * pdf.PdfPageMetrics.mm,
-            height: 55 * pdf.PdfPageMetrics.mm,
+            width: 85 * pdf.PdfPageFormat.mm,
+            height: 55 * pdf.PdfPageFormat.mm,
             decoration: pw.BoxDecoration(
-              border: pw.BoxBorder.all(
-                color: PdfColor.fromHex('#000000'),
+              border: pw.Border.all(
+                color: pdf.PdfColor.fromHex("#9E9E9E"),
               ),
             ),
             child: pw.Padding(
@@ -42,13 +41,13 @@ Future<File> generateMinimalBusinessCardPdf(Map<String, dynamic> data) async {
                   pw.Divider(),
                   pw.SizedBox(height: 10),
                   pw.Text(data["phone"] ?? "",
-                      style: pw.TextStyle(fontSize: 10)),
+                      style: const pw.TextStyle(fontSize: 10)),
                   pw.Text(data["email"] ?? "",
-                      style: pw.TextStyle(fontSize: 10)),
+                      style: const pw.TextStyle(fontSize: 10)),
                   pw.Text(data["address"] ?? "",
-                      style: pw.TextStyle(fontSize: 10)),
+                      style: const pw.TextStyle(fontSize: 10)),
                   pw.Text(data["website"] ?? "",
-                      style: pw.TextStyle(fontSize: 10)),
+                      style: const pw.TextStyle(fontSize: 10)),
                 ],
               ),
             ),

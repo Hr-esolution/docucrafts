@@ -1,7 +1,6 @@
 import 'dart:typed_data';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart' as pdf;
-import 'package:pdf/widgets.dart' show PdfColor;
+import 'package:pdf/widgets.dart' as pw;
 
 Future<Uint8List> generateBusinessCardPdf({
   required String fullName,
@@ -41,9 +40,9 @@ Future<Uint8List> generateBusinessCardPdf({
                 pw.SizedBox(height: 5),
                 pw.Text(
                   jobTitle,
-                  style: const pw.TextStyle(
+                  style: pw.TextStyle(
                     fontSize: 12,
-                    color: PdfColor.fromHex('#616161'),
+                    color: pdf.PdfColor.fromHex('#616161'),
                   ),
                 ),
                 pw.SizedBox(height: 10),
@@ -63,10 +62,13 @@ Future<Uint8List> generateBusinessCardPdf({
                     if (phone.isNotEmpty)
                       pw.Row(
                         children: [
-                          pw.Text('Tél : ',
-                              style: pw.TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(
+                            'Tél : ',
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                           pw.Text(phone,
                               style: const pw.TextStyle(fontSize: 10)),
                         ],
@@ -75,10 +77,13 @@ Future<Uint8List> generateBusinessCardPdf({
                       pw.SizedBox(height: 2),
                       pw.Row(
                         children: [
-                          pw.Text('Email : ',
-                              style: pw.TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(
+                            'Email : ',
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                           pw.Text(email,
                               style: const pw.TextStyle(fontSize: 10)),
                         ],
@@ -88,10 +93,13 @@ Future<Uint8List> generateBusinessCardPdf({
                       pw.SizedBox(height: 2),
                       pw.Row(
                         children: [
-                          pw.Text('Adresse : ',
-                              style: pw.TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(
+                            'Adresse : ',
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                           pw.Text(address,
                               style: const pw.TextStyle(fontSize: 10)),
                         ],
@@ -101,10 +109,13 @@ Future<Uint8List> generateBusinessCardPdf({
                       pw.SizedBox(height: 2),
                       pw.Row(
                         children: [
-                          pw.Text('Site : ',
-                              style: pw.TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(
+                            'Site : ',
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                           pw.Text(website,
                               style: const pw.TextStyle(fontSize: 10)),
                         ],
@@ -114,10 +125,13 @@ Future<Uint8List> generateBusinessCardPdf({
                       pw.SizedBox(height: 2),
                       pw.Row(
                         children: [
-                          pw.Text('LinkedIn : ',
-                              style: pw.TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(
+                            'LinkedIn : ',
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                           pw.Text(linkedin,
                               style: const pw.TextStyle(fontSize: 10)),
                         ],
@@ -127,10 +141,13 @@ Future<Uint8List> generateBusinessCardPdf({
                       pw.SizedBox(height: 2),
                       pw.Row(
                         children: [
-                          pw.Text('Twitter : ',
-                              style: pw.TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pw.FontWeight.bold)),
+                          pw.Text(
+                            'Twitter : ',
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                           pw.Text(twitter,
                               style: const pw.TextStyle(fontSize: 10)),
                         ],

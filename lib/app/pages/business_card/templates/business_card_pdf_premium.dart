@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart' as pdf;
-import 'package:pdf/widgets.dart' show PdfColor;
+import 'package:pdf/pdf.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
@@ -9,26 +8,23 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
 
   doc.addPage(
     pw.Page(
-      pageFormat: pdf.PdfPageFormat.a4.applyMargin(
-        left: 2.0 * pdf.PdfPageMetrics.mm,
-        top: 2.0 * pdf.PdfPageMetrics.mm,
-        right: 2.0 * pdf.PdfPageMetrics.mm,
-        bottom: 2.0 * pdf.PdfPageMetrics.mm,
+      pageFormat: PdfPageFormat.a4.applyMargin(
+        left: 2.0 * PdfPageFormat.mm,
+        top: 2.0 * PdfPageFormat.mm,
+        right: 2.0 * PdfPageFormat.mm,
+        bottom: 2.0 * PdfPageFormat.mm,
       ),
       build: (context) {
         return pw.Center(
           child: pw.Container(
-            width: 85 * pdf.PdfPageMetrics.mm,
-            height: 55 * pdf.PdfPageMetrics.mm,
+            width: 85 * PdfPageFormat.mm,
+            height: 55 * PdfPageFormat.mm,
             decoration: pw.BoxDecoration(
-              border: pw.BoxBorder.all(
+              border: pw.Border.all(
                 color: PdfColor.fromHex('#9E9E9E'),
+                width: 1,
               ),
-              gradient: pw.BoxGradient.linear(
-                pw.Point(0, 0),
-                pw.Point(85 * pdf.PdfPageMetrics.mm, 55 * pdf.PdfPageMetrics.mm),
-                [PdfColor.fromHex('#E0E0E0'), PdfColor.fromHex('#F5F5F5')],
-              ),
+              color: PdfColor.fromHex('#F5F5F5'), // fond uni
             ),
             child: pw.Padding(
               padding: const pw.EdgeInsets.all(15),
@@ -36,19 +32,30 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
                 mainAxisAlignment: pw.MainAxisAlignment.center,
                 crossAxisAlignment: pw.CrossAxisAlignment.center,
                 children: [
-                  pw.Text(data["company"] ?? "",
-                      style: pw.TextStyle(
-                          fontSize: 12,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColor.fromHex('#9E9E9E')),
+                  pw.Text(
+                    data["company"] ?? "",
+                    style: pw.TextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColor.fromHex('#9E9E9E'),
+                    ),
+                  ),
                   pw.SizedBox(height: 5),
-                  pw.Text(data["name"] ?? "",
-                      style: pw.TextStyle(
-                          fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                  pw.Text(
+                    data["name"] ?? "",
+                    style: pw.TextStyle(
+                      fontSize: 16,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
                   pw.SizedBox(height: 3),
-                  pw.Text(data["jobTitle"] ?? "",
-                      style: pw.TextStyle(
-                          fontSize: 10, fontWeight: pw.FontWeight.normal)),
+                  pw.Text(
+                    data["jobTitle"] ?? "",
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
                   pw.SizedBox(height: 10),
                   pw.Divider(
                     thickness: 0.5,
@@ -63,9 +70,9 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
                             pw.Text("📱 ${data["phone"] ?? ""}",
-                                style: pw.TextStyle(fontSize: 8)),
+                                style: const pw.TextStyle(fontSize: 8)),
                             pw.Text("✉️ ${data["email"] ?? ""}",
-                                style: pw.TextStyle(fontSize: 8)),
+                                style: const pw.TextStyle(fontSize: 8)),
                           ],
                         ),
                       ),
@@ -74,9 +81,9 @@ Future<File> generatePremiumBusinessCardPdf(Map<String, dynamic> data) async {
                           crossAxisAlignment: pw.CrossAxisAlignment.end,
                           children: [
                             pw.Text("🏢 ${data["address"] ?? ""}",
-                                style: pw.TextStyle(fontSize: 8)),
+                                style: const pw.TextStyle(fontSize: 8)),
                             pw.Text("🌐 ${data["website"] ?? ""}",
-                                style: pw.TextStyle(fontSize: 8)),
+                                style: const pw.TextStyle(fontSize: 8)),
                           ],
                         ),
                       ),

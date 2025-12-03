@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import '../models/dynamic_document_model.dart';
-import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 
 class BusinessCardController extends GetxController {
@@ -114,12 +113,13 @@ class BusinessCardController extends GetxController {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
-    
+
     try {
       await _storageRepository.saveDocument(document);
       Get.snackbar('Succès', 'Carte de visite enregistrée avec succès');
     } catch (e) {
-      Get.snackbar('Erreur', 'Échec de l\'enregistrement de la carte de visite: $e');
+      Get.snackbar(
+          'Erreur', 'Échec de l\'enregistrement de la carte de visite: $e');
     }
   }
 }

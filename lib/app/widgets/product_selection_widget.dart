@@ -11,13 +11,13 @@ class ProductSelectionWidget extends StatelessWidget {
   final bool showManualEntry;
 
   const ProductSelectionWidget({
-    Key? key,
+    super.key,
     required this.selectedProducts,
     required this.onAddProduct,
     required this.onRemoveProduct,
     required this.onProductUpdated,
     this.showManualEntry = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class ProductSelectionWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        
+
         // Dropdown to select existing products
         Obx(
           () => productController.products.isNotEmpty
@@ -52,7 +52,8 @@ class ProductSelectionWidget extends StatelessWidget {
                     items: productController.products.map((product) {
                       return DropdownMenuItem(
                         value: product,
-                        child: Text('${product.name} - \$${product.price} (${product.unit})'),
+                        child: Text(
+                            '${product.name} - \$${product.price} (${product.unit})'),
                       );
                     }).toList(),
                     onChanged: (Product? selectedProduct) {
@@ -95,8 +96,9 @@ class ProductSelectionWidget extends StatelessWidget {
           ...selectedProducts.asMap().entries.map((entry) {
             int index = entry.key;
             Product product = entry.value;
-            return _buildProductItem(product, index, onRemoveProduct, onProductUpdated);
-          }).toList(),
+            return _buildProductItem(
+                product, index, onRemoveProduct, onProductUpdated);
+          }),
         ],
       ],
     );
@@ -109,7 +111,8 @@ class ProductSelectionWidget extends StatelessWidget {
     Function(Product) onProductUpdated,
   ) {
     final quantityController = TextEditingController(text: '1');
-    final priceController = TextEditingController(text: product.price.toString());
+    final priceController =
+        TextEditingController(text: product.price.toString());
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -170,7 +173,8 @@ class ProductSelectionWidget extends StatelessWidget {
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       final quantity = double.tryParse(value) ?? 1;
-                      final price = double.tryParse(priceController.text) ?? product.price;
+                      final price = double.tryParse(priceController.text) ??
+                          product.price;
                       final updatedProduct = product.copyWith(
                         price: price * quantity,
                       );
@@ -190,7 +194,8 @@ class ProductSelectionWidget extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      final quantity = double.tryParse(quantityController.text) ?? 1;
+                      final quantity =
+                          double.tryParse(quantityController.text) ?? 1;
                       final price = double.tryParse(value) ?? product.price;
                       final updatedProduct = product.copyWith(
                         price: price * quantity,

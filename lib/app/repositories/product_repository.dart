@@ -16,7 +16,7 @@ class ProductRepository extends GetxService {
   Future<Product> saveProduct(Product product) async {
     final products = await getProducts();
     final existingIndex = products.indexWhere((p) => p.id == product.id);
-    
+
     if (existingIndex != -1) {
       products[existingIndex] = product.copyWith(
         updatedAt: DateTime.now(),
@@ -27,7 +27,7 @@ class ProductRepository extends GetxService {
         updatedAt: DateTime.now(),
       ));
     }
-    
+
     await _saveProducts(products);
     return product;
   }
@@ -46,6 +46,9 @@ class ProductRepository extends GetxService {
 
   Future<Product?> getProductById(String id) async {
     final products = await getProducts();
-    return products.firstWhere((p) => p.id == id, orElse: () => null);
+    // ignore: cast_from_null_always_fails
+    return products.firstWhere((p) => p.id == id,
+        // ignore: cast_from_null_always_fails
+        orElse: () => null as Product);
   }
 }
