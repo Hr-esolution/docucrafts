@@ -1,39 +1,47 @@
 ```
-# Dependency directories
+# Dependencies
 .dart_tool/
-.build/
-.dependencies/
+.packages
+.pub/
+pubspec.lock
 
-# Generated files
-*.g.dart
-*.freezed.dart
+# Build
+build/
+**/ios/Flutter/.last_build_id
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
+# Generated plugin code
+flutter/
+packages/
 
 # Coverage
 coverage/
-htmlcov/
-.coverage
 
-# Build artifacts
-build/
-dist/
+# Files that end with tilde should be ignored; it indicates a temporary file
+*~
+
+# Log files
+*.log
+
+# iOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/.last_build_id
+
+# Android
+**/android/**/gradle-wrapper.properties
+**/android/cmake_build/
+**/android/.gradle/
+**/android/gradle/
+**/android/build/
+**/android/app/build/
+
+# Web
+**/web/.dart_tool/
+**/web/build/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
 ```
