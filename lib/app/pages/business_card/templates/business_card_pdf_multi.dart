@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart' as pdf;
+import 'package:pdf/widgets.dart' show PdfColor;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
@@ -21,9 +22,9 @@ Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
             height: 55 * pdf.PdfPageMetrics.mm,
             decoration: pw.BoxDecoration(
               border: pw.BoxBorder.all(
-                color: pdf.PdfColors.grey,
+                color: PdfColor.fromHex('#9E9E9E'),
               ),
-              color: pdf.PdfColors.grey100,
+              color: PdfColor.fromHex('#F5F5F5'),
             ),
             child: pw.Padding(
               padding: const pw.EdgeInsets.all(12),
@@ -41,7 +42,7 @@ Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
                   pw.SizedBox(height: 8),
                   pw.Divider(
                     thickness: 1,
-                    color: pdf.PdfColors.grey,
+                    color: PdfColor.fromHex('#9E9E9E'),
                   ),
                   pw.SizedBox(height: 8),
                   pw.Row(
@@ -75,7 +76,7 @@ Future<File> generateMultiBusinessCardPdf(Map<String, dynamic> data) async {
                   ),
                   pw.SizedBox(height: 5),
                   pw.Text(data["website"] ?? "",
-                      style: pw.TextStyle(fontSize: 9, color: pdf.PdfColors.blue)),
+                      style: pw.TextStyle(fontSize: 9, color: PdfColor.fromHex('#2196F3'))),
                 ],
               ),
             ),

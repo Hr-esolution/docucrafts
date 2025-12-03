@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart' as pdf;
+import 'package:pdf/widgets.dart' show PdfColor;
 import 'package:path_provider/path_provider.dart';
 
 Future<File> generatePremiumDeliveryPdf(Map<String, dynamic> data) async {
@@ -13,7 +15,7 @@ Future<File> generatePremiumDeliveryPdf(Map<String, dynamic> data) async {
           children: [
             pw.Container(
               decoration: pw.BoxDecoration(
-                color: pw.PdfColors.grey300,
+                color: PdfColor.fromHex('#E0E0E0'),
               ),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(20),
@@ -29,14 +31,14 @@ Future<File> generatePremiumDeliveryPdf(Map<String, dynamic> data) async {
                               style: pw.TextStyle(
                                   fontSize: 26,
                                   fontWeight: pw.FontWeight.bold,
-                                  color: pw.PdfColors.black)),
+                                  color: PdfColor.fromHex('#000000')),
                           pw.SizedBox(height: 5),
                           pw.Text("N°: ${data["deliveryNumber"]}",
                               style: pw.TextStyle(
-                                  fontSize: 12, color: pw.PdfColors.black50)),
+                                  fontSize: 12, color: PdfColor.fromHex('#757575'))),
                           pw.Text("Date: ${data["deliveryDate"]}",
                               style: pw.TextStyle(
-                                  fontSize: 12, color: pw.PdfColors.black50)),
+                                  fontSize: 12, color: PdfColor.fromHex('#757575'))),
                         ],
                       ),
                     ),
@@ -112,12 +114,12 @@ Future<File> generatePremiumDeliveryPdf(Map<String, dynamic> data) async {
             pw.SizedBox(height: 20),
             pw.Table(
               border: pw.TableBorder.all(
-                color: pw.PdfColors.grey400,
+                color: PdfColor.fromHex('#BDBDBD'),
               ),
               children: [
                 pw.TableRow(
                   decoration: pw.BoxDecoration(
-                    color: pw.PdfColors.grey200,
+                    color: PdfColor.fromHex('#EEEEEE'),
                   ),
                   children: [
                     pw.Padding(
@@ -197,7 +199,7 @@ Future<File> generatePremiumDeliveryPdf(Map<String, dynamic> data) async {
                   pw.Container(
                     decoration: pw.BoxDecoration(
                       border: pw.BoxBorder.all(
-                        color: pw.PdfColors.grey400,
+                        color: PdfColor.fromHex('#BDBDBD'),
                       ),
                     ),
                     child: pw.Padding(

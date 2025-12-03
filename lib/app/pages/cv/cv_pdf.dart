@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart' as pdf;
+import 'package:pdf/widgets.dart' show PdfColor;
 
 Future<Uint8List> generateCvPdf({
   required String fullName,
@@ -23,7 +24,7 @@ Future<Uint8List> generateCvPdf({
           children: [
             // En-tête
             pw.Container(
-              color: pdf.PdfColors.grey300,
+              color: PdfColor.fromHex('#E0E0E0'),
               width: double.infinity,
               padding: const pw.EdgeInsets.all(20),
               child: pw.Column(
@@ -40,7 +41,7 @@ Future<Uint8List> generateCvPdf({
                     jobTitle,
                     style: const pw.TextStyle(
                       fontSize: 16,
-                      color: pdf.PdfColors.grey700,
+                      color: PdfColor.fromHex('#616161'),
                     ),
                   ),
                 ],
