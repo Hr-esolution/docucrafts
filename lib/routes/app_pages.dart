@@ -22,6 +22,7 @@ import '../app/pages/template_selection_page.dart';
 import '../app/pages/splash_page.dart'; // Added splash page import
 import '../app/pages/products.dart'; // Added products page import
 import '../app/pages/documents_list_page.dart'; // Added documents list page import
+import '../app/pages/document_details_page.dart'; // Added document details page import
 
 abstract class AppPages {
   static const INITIAL = '/splash'; // Changed to splash as initial route
@@ -102,6 +103,12 @@ abstract class AppPages {
     GetPage(
       name: Routes.DOCUMENTS,
       page: () => const DocumentsListPage(),
+    ),
+    GetPage(
+      name: '${Routes.DOCUMENT_DETAILS}/:id',
+      page: () => DocumentDetailsPage(
+        document: Get.arguments as DynamicDocumentModel,
+      ),
     ),
   ];
 }
