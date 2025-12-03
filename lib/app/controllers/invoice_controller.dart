@@ -3,6 +3,9 @@ import '../models/dynamic_document_model.dart';
 import '../models/product.dart';
 import '../repositories/storage_repository.dart';
 import '../pages/invoice/invoice_pdf.dart' as invoice_pdf;
+import '../pages/invoice/previews/invoice_pdf_minimal_preview.dart';
+import '../pages/invoice/previews/invoice_pdf_multi_preview.dart';
+import '../pages/invoice/previews/invoice_pdf_premium_preview.dart';
 import 'dart:math';
 import '../controllers/template_controller.dart';
 
@@ -21,11 +24,11 @@ class InvoiceController extends GetxController {
 
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for invoices
-    final invoiceTemplates = _templateController.getTemplatesByCategory('invoice');
-    if (invoiceTemplates.isNotEmpty) {
-      // Use the first available template
-      final template = invoiceTemplates.first;
-      fields.assignAll(template.fields.map((fieldMap) => DocumentField(
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    if (selectedTemplate != null && selectedTemplate.category == 'invoice') {
+      // Use the selected template
+      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
         id: fieldMap['id'] ?? '',
         label: fieldMap['label'] ?? '',
         value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
@@ -373,6 +376,38 @@ class InvoiceController extends GetxController {
 
     // Afficher un message de succès ou gérer le PDF autrement
     Get.snackbar('Succès', 'PDF généré avec succès');
+  }
+
+  void navigateToPreview() {
+    // Récupérer les données du formulaire
+    final Map<String, dynamic> data = {};
+    for (final field in fields) {
+      data[field.id] = field.value;
+    }
+    
+    // Récupérer le template sélectionné
+    final selectedTemplate = _templateController.getSelectedTemplate();
+    
+    // Rediriger vers la page d'aperçu appropriée en fonction du template
+    if (selectedTemplate != null && selectedTemplate.category == 'invoice') {
+      switch (selectedTemplate.id) {
+        case 'invoice_minimal':
+          Get.to(() => MinimalInvoicePreview(data: data));
+          break;
+        case 'invoice_multi_column':
+          Get.to(() => MultiColumnInvoicePreview(data: data));
+          break;
+        case 'invoice_premium':
+          Get.to(() => PremiumInvoicePreview(data: data));
+          break;
+        default:
+          Get.to(() => MinimalInvoicePreview(data: data));
+          break;
+      }
+    } else {
+      // Si aucun template n'est sélectionné, utiliser le template minimal par défaut
+      Get.to(() => MinimalInvoicePreview(data: data));
+    }
   }
 
   String _getFieldValue(String fieldId) {

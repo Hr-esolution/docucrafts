@@ -15,6 +15,10 @@ class QuoteFormPage extends StatelessWidget {
         title: const Text('Créer un Devis'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.visibility),
+            onPressed: () => controller.navigateToPreview(),
+          ),
+          IconButton(
             icon: const Icon(Icons.save),
             onPressed: () => controller.saveQuote(),
           ),
