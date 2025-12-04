@@ -53,6 +53,15 @@ class InvoiceController extends GetxController {
         isRequired: true,
         isEnabled: true,
       ),
+      // Champ pour le logo
+      DocumentField(
+        id: 'company_logo',
+        label: 'Logo de l\'entreprise',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
       // Champs obligatoires pour le numéro de facture
       DocumentField(
         id: 'invoice_number',
@@ -347,6 +356,7 @@ class InvoiceController extends GetxController {
     final paymentTerms = _getFieldValue('payment_terms');
     final paymentMethod = _getFieldValue('payment_method');
     final lateFees = _getFieldValue('late_fees');
+    final logoPath = _getFieldValue('company_logo'); // Récupérer le chemin du logo
 
     // Générer le PDF
     await invoice_pdf.generateInvoicePdf(
@@ -372,6 +382,7 @@ class InvoiceController extends GetxController {
       paymentTerms: paymentTerms,
       paymentMethod: paymentMethod,
       lateFees: lateFees,
+      logoPath: logoPath.isEmpty ? null : logoPath, // Passer le logo si disponible
     );
 
     // Afficher un message de succès ou gérer le PDF autrement

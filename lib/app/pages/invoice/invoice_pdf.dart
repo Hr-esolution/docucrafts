@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart' as pdf;
+import 'dart:io';
 
 Future<Uint8List> generateInvoicePdf({
   required String invoiceTitle,
@@ -25,6 +26,7 @@ Future<Uint8List> generateInvoicePdf({
   required String paymentTerms,
   required String paymentMethod,
   required String lateFees,
+  String? logoPath, // Ajout du paramètre pour le logo
 }) async {
   final doc = pw.Document();
 
@@ -33,16 +35,34 @@ Future<Uint8List> generateInvoicePdf({
       build: (pw.Context context) {
         return pw.Column(
           children: [
-            // En-tête de la facture
-            pw.Align(
-              alignment: pw.Alignment.centerRight,
-              child: pw.Text(
-                invoiceTitle,
-                style: pw.TextStyle(
-                  fontSize: 24,
-                  fontWeight: pw.FontWeight.bold,
+            // En-tête de la facture avec logo
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                // Logo à gauche
+                if (logoPath != null && logoPath.isNotEmpty)
+                  pw.Container(
+                    child: pw.Image(
+                      pw.MemoryImage(File(logoPath).readAsBytesSync()),
+                      width: 100,
+                      height: 60,
+                      fit: pw.BoxFit.contain,
+                    ),
+                  ),
+                // Titre à droite
+                pw.Expanded(
+                  child: pw.Align(
+                    alignment: pw.Alignment.centerRight,
+                    child: pw.Text(
+                      invoiceTitle,
+                      style: pw.TextStyle(
+                        fontSize: 24,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             pw.SizedBox(height: 20),
 

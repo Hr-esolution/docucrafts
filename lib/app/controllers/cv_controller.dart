@@ -39,6 +39,14 @@ class CvController extends GetxController {
   void _initializeDefaultFields() {
     fields.assignAll([
       DocumentField(
+        id: 'company_logo',
+        label: 'Logo de l\'entreprise',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
         id: 'full_name',
         label: 'Nom complet',
         value: '',
