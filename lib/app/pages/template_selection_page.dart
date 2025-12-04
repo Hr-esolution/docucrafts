@@ -364,4 +364,38 @@ class TemplateSelectionPage extends StatelessWidget {
         return 'Document';
     }
   }
+
+  IconData _getDocumentIcon(String type) {
+    switch (type) {
+      case 'invoice':
+        return Icons.receipt;
+      case 'quote':
+        return Icons.description;
+      case 'delivery':
+        return Icons.local_shipping;
+      case 'business_card':
+        return Icons.card_membership;
+      case 'cv':
+        return Icons.person;
+      default:
+        return Icons.insert_drive_file;
+    }
+  }
+
+  Color _getDocumentColor(String type) {
+    switch (type) {
+      case 'invoice':
+        return Colors.green;
+      case 'quote':
+        return Colors.blue;
+      case 'delivery':
+        return Colors.orange;
+      case 'business_card':
+        return Colors.purple;
+      case 'cv':
+        return Colors.indigo;
+      default:
+        return Colors.grey;
+    }
+  }
 }
