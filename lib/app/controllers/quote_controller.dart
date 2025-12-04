@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+import 'dart:io';
 import 'package:get/get.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'package:printing/printing.dart';
 import '../models/dynamic_document_model.dart';
 import '../models/product.dart';
 import '../repositories/storage_repository.dart';
@@ -430,6 +435,193 @@ class QuoteController extends GetxController {
     } else {
       // Si aucun template n'est sélectionné, utiliser le template minimal par défaut
       Get.to(() => MinimalQuotePreview(data: data));
+    }
+  }
+
+  Future<void> generateQuotePdf() async {
+    // Récupérer les données du formulaire
+    final Map<String, dynamic> data = {};
+    for (final field in fields) {
+      data[field.id] = field.value;
+    }
+
+    // Générer le PDF en utilisant les données du formulaire
+    try {
+      // Extraire les données nécessaires
+      final quoteNumber = data['quote_number'] ?? '';
+      final date = data['date'] ?? '';
+      final clientName = data['client_name'] ?? '';
+      final clientAddress = data['client_address'] ?? '';
+      final items = data['items'] ?? '';
+      final amount = data['subtotal_ht'] ?? '';
+      final vat = data['total_vat'] ?? '';
+      final total = data['total_ttc'] ?? '';
+      final validityDate = data['validity_date'] ?? '';
+
+      // Importer la fonction depuis le fichier approprié
+      final pdfBytes = await generateQuotePdfFromData(
+        quoteNumber: quoteNumber,
+        date: date,
+        clientName: clientName,
+        clientAddress: clientAddress,
+        items: items,
+        amount: amount,
+        vat: vat,
+        total: total,
+        validityDate: validityDate,
+      );
+
+      // Sauvegarder le PDF ou l'afficher selon les besoins
+      await _saveAndShowPdf(pdfBytes, 'devis_$quoteNumber.pdf');
+    } catch (e) {
+      Get.snackbar('Erreur', 'Impossible de générer le PDF: $e');
+    }
+  }
+
+  Future<Uint8List> generateQuotePdfFromData({
+    required String quoteNumber,
+    required String date,
+    required String clientName,
+    required String clientAddress,
+    required String items,
+    required String amount,
+    required String vat,
+    required String total,
+    required String validityDate,
+  }) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            children: [
+              pw.Align(
+                alignment: pw.Alignment.centerRight,
+                child: pw.Text(
+                  'Devis',
+                  style: pw.TextStyle(
+                    fontSize: 24,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          'Numéro du devis: $quoteNumber',
+                          style: const pw.TextStyle(fontSize: 14),
+                        ),
+                        pw.Text(
+                          'Date: $date',
+                          style: const pw.TextStyle(fontSize: 14),
+                        ),
+                        pw.Text(
+                          'Date de validité: $validityDate',
+                          style: const pw.TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.end,
+                      children: [
+                        pw.Text(
+                          'À l\'attention de:',
+                          style: pw.TextStyle(
+                            fontSize: 14,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.Text(clientName,
+                            style: const pw.TextStyle(fontSize: 14)),
+                        pw.Text(clientAddress,
+                            style: const pw.TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 30),
+              pw.Expanded(
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      'Désignation des articles',
+                      style: pw.TextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                    pw.SizedBox(height: 10),
+                    pw.Text(items, style: const pw.TextStyle(fontSize: 14)),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Align(
+                alignment: pw.Alignment.centerRight,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                  children: [
+                    pw.Text(
+                      'Montant HT: $amount €',
+                      style: const pw.TextStyle(fontSize: 14),
+                    ),
+                    pw.Text(
+                      'TVA: $vat €',
+                      style: const pw.TextStyle(fontSize: 14),
+                    ),
+                    pw.Divider(),
+                    pw.Text(
+                      'Total TTC: $total €',
+                      style: pw.TextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Align(
+                alignment: pw.Alignment.centerRight,
+                child: pw.Text(
+                  'Merci pour votre confiance!',
+                  style: const pw.TextStyle(fontSize: 12),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  Future<void> _saveAndShowPdf(Uint8List pdfBytes, String filename) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$filename');
+      
+      await file.writeAsBytes(pdfBytes);
+      
+      // Afficher le PDF dans une nouvelle page
+      await Printing.layoutPdf(
+        onLayout: (format) => pdfBytes,
+        name: filename,
+      );
+    } catch (e) {
+      Get.snackbar('Erreur', 'Impossible de sauvegarder ou afficher le PDF: $e');
     }
   }
 }
