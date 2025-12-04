@@ -48,7 +48,7 @@ class TemplateRepository {
         name: 'Standard Invoice',
         description: 'A clean and professional invoice template',
         category: 'invoice',
-        previewImage: 'assets/templates/invoice_default.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'company_address', 'label': 'Company Address', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -67,7 +67,7 @@ class TemplateRepository {
         name: 'Modern Invoice',
         description: 'A modern and sleek invoice template',
         category: 'invoice',
-        previewImage: 'assets/templates/invoice_modern.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_logo', 'label': 'Company Logo', 'type': 'text', 'isRequired': false, 'isEnabled': true},
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -88,7 +88,7 @@ class TemplateRepository {
         name: 'Business Invoice',
         description: 'A formal business invoice template',
         category: 'invoice',
-        previewImage: 'assets/templates/invoice_business.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_logo', 'label': 'Company Logo', 'type': 'text', 'isRequired': false, 'isEnabled': true},
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -117,7 +117,7 @@ class TemplateRepository {
         name: 'Professional Quote',
         description: 'A comprehensive quote template',
         category: 'quote',
-        previewImage: 'assets/templates/quote_default.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'company_address', 'label': 'Company Address', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -136,7 +136,7 @@ class TemplateRepository {
         name: 'Modern Quote',
         description: 'A modern quote template with enhanced features',
         category: 'quote',
-        previewImage: 'assets/templates/quote_modern.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_logo', 'label': 'Company Logo', 'type': 'text', 'isRequired': false, 'isEnabled': true},
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -157,7 +157,7 @@ class TemplateRepository {
         name: 'Business Quote',
         description: 'A formal business quote template',
         category: 'quote',
-        previewImage: 'assets/templates/quote_business.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_logo', 'label': 'Company Logo', 'type': 'text', 'isRequired': false, 'isEnabled': true},
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -186,7 +186,7 @@ class TemplateRepository {
         name: 'Delivery Note',
         description: 'Simple delivery note template',
         category: 'delivery',
-        previewImage: 'assets/templates/delivery_default.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'company_address', 'label': 'Company Address', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -205,7 +205,7 @@ class TemplateRepository {
         name: 'Detailed Delivery',
         description: 'A detailed delivery note with item tracking',
         category: 'delivery',
-        previewImage: 'assets/templates/delivery_detailed.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'company_address', 'label': 'Company Address', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -228,7 +228,7 @@ class TemplateRepository {
         name: 'Business Delivery',
         description: 'A formal business delivery template',
         category: 'delivery',
-        previewImage: 'assets/templates/delivery_business.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'company_logo', 'label': 'Company Logo', 'type': 'text', 'isRequired': false, 'isEnabled': true},
           {'id': 'company_name', 'label': 'Company Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -259,7 +259,7 @@ class TemplateRepository {
         name: 'Basic Business Card',
         description: 'Simple and clean business card template',
         category: 'business_card',
-        previewImage: 'assets/templates/business_card_basic.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'full_name', 'label': 'Full Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'job_title', 'label': 'Job Title', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -276,7 +276,7 @@ class TemplateRepository {
         name: 'Professional Business Card',
         description: 'Professional business card with social links',
         category: 'business_card',
-        previewImage: 'assets/templates/business_card_professional.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'full_name', 'label': 'Full Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'job_title', 'label': 'Job Title', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -296,7 +296,7 @@ class TemplateRepository {
         name: 'Creative Business Card',
         description: 'Creative business card with extended information',
         category: 'business_card',
-        previewImage: 'assets/templates/business_card_creative.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'full_name', 'label': 'Full Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'job_title', 'label': 'Job Title', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -321,7 +321,7 @@ class TemplateRepository {
         name: 'Basic CV',
         description: 'Simple and clean CV template',
         category: 'cv',
-        previewImage: 'assets/templates/cv_basic.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'full_name', 'label': 'Full Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'job_title', 'label': 'Job Title', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -341,7 +341,7 @@ class TemplateRepository {
         name: 'Professional CV',
         description: 'Professional CV with detailed sections',
         category: 'cv',
-        previewImage: 'assets/templates/cv_professional.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'full_name', 'label': 'Full Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'job_title', 'label': 'Job Title', 'type': 'text', 'isRequired': true, 'isEnabled': true},
@@ -364,7 +364,7 @@ class TemplateRepository {
         name: 'Modern CV',
         description: 'Modern CV with enhanced design elements',
         category: 'cv',
-        previewImage: 'assets/templates/cv_modern.png',
+        previewImage: 'assets/images/logo.png',
         fields: [
           {'id': 'full_name', 'label': 'Full Name', 'type': 'text', 'isRequired': true, 'isEnabled': true},
           {'id': 'job_title', 'label': 'Job Title', 'type': 'text', 'isRequired': true, 'isEnabled': true},

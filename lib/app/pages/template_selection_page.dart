@@ -153,23 +153,56 @@ class TemplateSelectionPage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // Template preview image (placeholder)
-                  Container(
-                    width: double.infinity,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1,
+                  // Template preview image with document type icon
+                  Stack(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: template.previewImage.isNotEmpty
+                            ? Image.asset(
+                                template.previewImage,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    _getDocumentIcon(documentType),
+                                    size: 40,
+                                    color: _getDocumentColor(documentType),
+                                  );
+                                },
+                              )
+                            : Icon(
+                                _getDocumentIcon(documentType),
+                                size: 40,
+                                color: _getDocumentColor(documentType),
+                              ),
                       ),
-                    ),
-                    child: const Icon(
-                      Icons.picture_as_pdf,
-                      size: 40,
-                      color: Colors.grey,
-                    ),
+                      // Document type icon overlay
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: _getDocumentColor(documentType).withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            _getDocumentIcon(documentType),
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
                   Text(
