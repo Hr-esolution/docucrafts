@@ -3,6 +3,8 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class SimpleCVPreview extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -82,7 +84,8 @@ class SimpleCVPreview extends StatelessWidget {
                           Text('📱 ${data['phone']}'),
                         if (data['email'] != null && data['email'].isNotEmpty)
                           Text('✉️ ${data['email']}'),
-                        if (data['address'] != null && data['address'].isNotEmpty)
+                        if (data['address'] != null &&
+                            data['address'].isNotEmpty)
                           Text('📍 ${data['address']}'),
                       ],
                     ),
@@ -90,7 +93,7 @@ class SimpleCVPreview extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Experience
               const Text(
                 'Expérience professionnelle',
@@ -104,9 +107,9 @@ class SimpleCVPreview extends StatelessWidget {
                 Text(data['experience'])
               else
                 const Text('Aucune expérience professionnelle renseignée'),
-              
+
               const SizedBox(height: 16),
-              
+
               // Education
               const Text(
                 'Formation',
@@ -120,9 +123,9 @@ class SimpleCVPreview extends StatelessWidget {
                 Text(data['education'])
               else
                 const Text('Aucune formation renseignée'),
-              
+
               const SizedBox(height: 16),
-              
+
               // Skills
               const Text(
                 'Compétences',
@@ -144,9 +147,9 @@ class SimpleCVPreview extends StatelessWidget {
   }
 
   Future<void> _printDocument(BuildContext context) async {
-    final document = await _generatePdfDocument();
-    Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => document.save(),
+    final pdf = await _generatePdfDocument();
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
 
@@ -168,15 +171,11 @@ class SimpleCVPreview extends StatelessWidget {
                       width: 80,
                       height: 80,
                       decoration: pw.BoxDecoration(
-                        color: pw.Colors.grey200,
+                        color: PdfColors.grey300,
                         borderRadius: pw.BorderRadius.circular(8),
                       ),
                       child: pw.Center(
-                        child: pw.Icon(
-                          pw.PdfIcons.person,
-                          size: 40,
-                          color: pw.Colors.grey,
-                        ),
+                        child: pw.Text("👤", style: pw.TextStyle(fontSize: 40)),
                       ),
                     ),
                     pw.SizedBox(width: 16),
@@ -196,7 +195,7 @@ class SimpleCVPreview extends StatelessWidget {
                             data['title'] ?? 'Poste recherché',
                             style: pw.TextStyle(
                               fontSize: 16,
-                              color: pw.Colors.grey,
+                              color: PdfColors.grey600,
                             ),
                           ),
                           pw.SizedBox(height: 8),
@@ -204,7 +203,8 @@ class SimpleCVPreview extends StatelessWidget {
                             pw.Text('📱 ${data['phone']}'),
                           if (data['email'] != null && data['email'].isNotEmpty)
                             pw.Text('✉️ ${data['email']}'),
-                          if (data['address'] != null && data['address'].isNotEmpty)
+                          if (data['address'] != null &&
+                              data['address'].isNotEmpty)
                             pw.Text('📍 ${data['address']}'),
                         ],
                       ),
@@ -212,7 +212,7 @@ class SimpleCVPreview extends StatelessWidget {
                   ],
                 ),
                 pw.SizedBox(height: 24),
-                
+
                 // Experience
                 pw.Text(
                   'Expérience professionnelle',
@@ -226,9 +226,9 @@ class SimpleCVPreview extends StatelessWidget {
                   pw.Text(data['experience'])
                 else
                   pw.Text('Aucune expérience professionnelle renseignée'),
-                
+
                 pw.SizedBox(height: 16),
-                
+
                 // Education
                 pw.Text(
                   'Formation',
@@ -242,9 +242,9 @@ class SimpleCVPreview extends StatelessWidget {
                   pw.Text(data['education'])
                 else
                   pw.Text('Aucune formation renseignée'),
-                
+
                 pw.SizedBox(height: 16),
-                
+
                 // Skills
                 pw.Text(
                   'Compétences',
@@ -268,14 +268,13 @@ class SimpleCVPreview extends StatelessWidget {
     return pdf;
   }
 
-  void _shareDocument() async {
-    final document = await _generatePdfDocument();
-    final bytes = await document.save();
-    
-    await Share.shareWithResult(
-      bytes,
-      subject: 'Curriculum Vitae',
-      text: 'Voici mon CV',
-    );
+  Future<void> _shareDocument() async {
+    final pdf = await _generatePdfDocument();
+    final bytes = await pdf.save();
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/cv_simple.pdf');
+    await file.writeAsBytes(bytes);
+    await Share.shareXFiles([XFile(file.path)],
+        text: 'Voici mon CV', subject: 'Curriculum Vitae');
   }
 }

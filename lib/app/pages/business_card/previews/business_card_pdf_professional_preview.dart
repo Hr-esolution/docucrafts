@@ -3,6 +3,8 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class ProfessionalBusinessCardPreview extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -125,7 +127,7 @@ class ProfessionalBusinessCardPreview extends StatelessWidget {
 
   Future<void> _printDocument(BuildContext context) async {
     final document = await _generatePdfDocument();
-    Printing.layoutPdf(
+    await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => document.save(),
     );
   }
@@ -141,17 +143,9 @@ class ProfessionalBusinessCardPreview extends StatelessWidget {
               width: 350,
               height: 200,
               decoration: pw.BoxDecoration(
-                color: pw.Colors.white,
-                border: pw.BoxBorder.all(color: pw.Colors.grey300),
+                color: PdfColors.white,
+                border: pw.Border.all(color: PdfColors.grey300),
                 borderRadius: pw.BorderRadius.circular(8),
-                boxShadow: [
-                  pw.BoxShadow(
-                    color: pw.Colors.grey.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: pw.Offset(0, 3),
-                  ),
-                ],
               ),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(20),
@@ -178,7 +172,7 @@ class ProfessionalBusinessCardPreview extends StatelessWidget {
                                 data['title'] ?? 'Titre du poste',
                                 style: pw.TextStyle(
                                   fontSize: 14,
-                                  color: pw.Colors.grey,
+                                  color: PdfColors.grey,
                                 ),
                               ),
                               pw.SizedBox(height: 12),
@@ -186,7 +180,7 @@ class ProfessionalBusinessCardPreview extends StatelessWidget {
                                 data['company'] ?? 'Nom de l\'entreprise',
                                 style: pw.TextStyle(
                                   fontSize: 14,
-                                  fontWeight: pw.FontWeight.w500,
+                                  fontWeight: pw.FontWeight.normal,
                                 ),
                               ),
                             ],
@@ -196,15 +190,12 @@ class ProfessionalBusinessCardPreview extends StatelessWidget {
                           width: 60,
                           height: 60,
                           decoration: pw.BoxDecoration(
-                            color: pw.Colors.grey200,
+                            color: PdfColors.grey200,
                             borderRadius: pw.BorderRadius.circular(8),
                           ),
                           child: pw.Center(
-                            child: pw.Icon(
-                              pw.PdfIcons.person,
-                              size: 30,
-                              color: pw.Colors.grey,
-                            ),
+                            child: pw.Text('👤',
+                                style: pw.TextStyle(fontSize: 30)),
                           ),
                         ),
                       ],
@@ -217,7 +208,8 @@ class ProfessionalBusinessCardPreview extends StatelessWidget {
                           pw.Text('📱 ${data['phone']}'),
                         if (data['email'] != null && data['email'].isNotEmpty)
                           pw.Text('✉️ ${data['email']}'),
-                        if (data['address'] != null && data['address'].isNotEmpty)
+                        if (data['address'] != null &&
+                            data['address'].isNotEmpty)
                           pw.Text('📍 ${data['address']}'),
                       ],
                     ),
@@ -236,11 +228,17 @@ class ProfessionalBusinessCardPreview extends StatelessWidget {
   void _shareDocument() async {
     final document = await _generatePdfDocument();
     final bytes = await document.save();
-    
-    await Share.shareWithResult(
-      bytes,
-      subject: 'Carte de visite',
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/professional_business_card.pdf';
+    final file = File(filePath);
+
+    await file.writeAsBytes(bytes, flush: true);
+
+    await Share.shareXFiles(
+      [XFile(filePath)],
       text: 'Voici ma carte de visite',
+      subject: 'Carte de visite',
     );
   }
 }

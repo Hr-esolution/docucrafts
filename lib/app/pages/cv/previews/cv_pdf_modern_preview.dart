@@ -3,16 +3,18 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
-class ModernCVPreview extends StatelessWidget {
+class ModernBusinessCardPreview extends StatelessWidget {
   final Map<String, dynamic> data;
-  const ModernCVPreview({super.key, required this.data});
+  const ModernBusinessCardPreview({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Aperçu CV moderne"),
+        title: const Text("Aperçu carte de visite moderne"),
         actions: [
           IconButton(
             icon: const Icon(Icons.print),
@@ -33,131 +35,71 @@ class ModernCVPreview extends StatelessWidget {
   }
 
   Widget _buildPreview() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Card(
+    return Center(
+      child: Container(
+        width: 350,
+        height: 200,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 40,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data['name'] ?? 'Nom complet',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            data['title'] ?? 'Poste recherché',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              
-              // Contact information
-              const Text(
-                'Coordonnées',
-                style: TextStyle(
-                  fontSize: 18,
+              Text(
+                data['name'] ?? 'Nom complet',
+                style: const TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 4),
+              Text(
+                data['title'] ?? 'Titre du poste',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                data['company'] ?? 'Nom de l\'entreprise',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (data['phone'] != null && data['phone'].isNotEmpty)
-                    Text('📱 ${data['phone']}'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        '📱 ${data['phone']}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
                   if (data['email'] != null && data['email'].isNotEmpty)
-                    Text('✉️ ${data['email']}'),
-                  if (data['address'] != null && data['address'].isNotEmpty)
-                    Text('📍 ${data['address']}'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        '✉️ ${data['email']}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
                 ],
               ),
-              const SizedBox(height: 16),
-              
-              // Experience
-              const Text(
-                'Expérience professionnelle',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              if (data['experience'] != null && data['experience'].isNotEmpty)
-                Text(data['experience'])
-              else
-                const Text('Aucune expérience professionnelle renseignée'),
-              
-              const SizedBox(height: 16),
-              
-              // Education
-              const Text(
-                'Formation',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              if (data['education'] != null && data['education'].isNotEmpty)
-                Text(data['education'])
-              else
-                const Text('Aucune formation renseignée'),
-              
-              const SizedBox(height: 16),
-              
-              // Skills
-              const Text(
-                'Compétences',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              if (data['skills'] != null && data['skills'].isNotEmpty)
-                Text(data['skills'])
-              else
-                const Text('Aucune compétence renseignée'),
             ],
           ),
         ),
@@ -166,160 +108,95 @@ class ModernCVPreview extends StatelessWidget {
   }
 
   Future<void> _printDocument(BuildContext context) async {
-    final document = await _generatePdfDocument();
-    Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => document.save(),
+    final pdf = await _generatePdfDocument();
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
 
   Future<pw.Document> _generatePdfDocument() async {
     final pdf = pw.Document();
-
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
-          return pw.Padding(
-            padding: const pw.EdgeInsets.all(24),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                // Header
-                pw.Container(
-                  padding: const pw.EdgeInsets.all(16),
-                  decoration: pw.BoxDecoration(
-                    color: pw.Colors.blue100,
-                    borderRadius: pw.BorderRadius.circular(8),
-                  ),
-                  child: pw.Row(
-                    children: [
-                      pw.Container(
-                        width: 80,
-                        height: 80,
-                        decoration: pw.BoxDecoration(
-                          color: pw.Colors.grey200,
-                          borderRadius: pw.BorderRadius.circular(8),
-                        ),
-                        child: pw.Center(
-                          child: pw.Icon(
-                            pw.PdfIcons.person,
-                            size: 40,
-                            color: pw.Colors.grey,
-                          ),
-                        ),
-                      ),
-                      pw.SizedBox(width: 16),
-                      pw.Expanded(
-                        child: pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Text(
-                              data['name'] ?? 'Nom complet',
-                              style: pw.TextStyle(
-                                fontSize: 24,
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                            pw.SizedBox(height: 4),
-                            pw.Text(
-                              data['title'] ?? 'Poste recherché',
-                              style: pw.TextStyle(
-                                fontSize: 16,
-                                color: pw.Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+          return pw.Center(
+            child: pw.Container(
+              width: 350,
+              height: 200,
+              decoration: pw.BoxDecoration(
+                gradient: pw.LinearGradient(
+                  colors: [
+                    PdfColor.fromHex('#667eea'),
+                    PdfColor.fromHex('#764ba2')
+                  ],
+                  begin: pw.Alignment.topLeft,
+                  end: pw.Alignment.bottomRight,
                 ),
-                pw.SizedBox(height: 24),
-                
-                // Contact information
-                pw.Text(
-                  'Coordonnées',
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-                pw.SizedBox(height: 8),
-                pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                borderRadius: pw.BorderRadius.circular(12),
+              ),
+              child: pw.Padding(
+                padding: const pw.EdgeInsets.all(16),
+                child: pw.Column(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
                   children: [
-                    if (data['phone'] != null && data['phone'].isNotEmpty)
-                      pw.Text('📱 ${data['phone']}'),
-                    if (data['email'] != null && data['email'].isNotEmpty)
-                      pw.Text('✉️ ${data['email']}'),
-                    if (data['address'] != null && data['address'].isNotEmpty)
-                      pw.Text('📍 ${data['address']}'),
+                    pw.Text(
+                      data['name'] ?? 'Nom complet',
+                      style: pw.TextStyle(
+                        fontSize: 20,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColor.fromInt(0xFFFFFFFF),
+                      ),
+                    ),
+                    pw.SizedBox(height: 4),
+                    pw.Text(
+                      data['title'] ?? 'Titre du poste',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColor.fromInt(0xB3FFFFFF), // 70% blanc
+                      ),
+                    ),
+                    pw.SizedBox(height: 16),
+                    pw.Text(
+                      data['company'] ?? 'Nom de l\'entreprise',
+                      style: pw.TextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColor.fromInt(0xFFFFFFFF),
+                      ),
+                    ),
+                    pw.SizedBox(height: 16),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      children: [
+                        if (data['phone'] != null && data['phone'].isNotEmpty)
+                          pw.Text('📱 ${data['phone']}',
+                              style: pw.TextStyle(
+                                  color: PdfColor.fromInt(0xFFFFFFFF))),
+                        if (data['email'] != null && data['email'].isNotEmpty)
+                          pw.Text('✉️ ${data['email']}',
+                              style: pw.TextStyle(
+                                  color: PdfColor.fromInt(0xFFFFFFFF))),
+                      ],
+                    ),
                   ],
                 ),
-                pw.SizedBox(height: 16),
-                
-                // Experience
-                pw.Text(
-                  'Expérience professionnelle',
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-                pw.SizedBox(height: 8),
-                if (data['experience'] != null && data['experience'].isNotEmpty)
-                  pw.Text(data['experience'])
-                else
-                  pw.Text('Aucune expérience professionnelle renseignée'),
-                
-                pw.SizedBox(height: 16),
-                
-                // Education
-                pw.Text(
-                  'Formation',
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-                pw.SizedBox(height: 8),
-                if (data['education'] != null && data['education'].isNotEmpty)
-                  pw.Text(data['education'])
-                else
-                  pw.Text('Aucune formation renseignée'),
-                
-                pw.SizedBox(height: 16),
-                
-                // Skills
-                pw.Text(
-                  'Compétences',
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-                pw.SizedBox(height: 8),
-                if (data['skills'] != null && data['skills'].isNotEmpty)
-                  pw.Text(data['skills'])
-                else
-                  pw.Text('Aucune compétence renseignée'),
-              ],
+              ),
             ),
           );
         },
       ),
     );
-
     return pdf;
   }
 
-  void _shareDocument() async {
-    final document = await _generatePdfDocument();
-    final bytes = await document.save();
-    
-    await Share.shareWithResult(
-      bytes,
-      subject: 'Curriculum Vitae',
-      text: 'Voici mon CV',
-    );
+  Future<void> _shareDocument() async {
+    final pdf = await _generatePdfDocument();
+    final bytes = await pdf.save();
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/carte_de_visite_modern.pdf');
+    await file.writeAsBytes(bytes);
+    await Share.shareXFiles([XFile(file.path)],
+        text: 'Voici ma carte de visite', subject: 'Carte de visite');
   }
 }

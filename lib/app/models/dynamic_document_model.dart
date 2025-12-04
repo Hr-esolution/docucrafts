@@ -95,6 +95,25 @@ class DocumentField {
         return FieldType.text;
     }
   }
+
+  // ✅ Ajout de copyWith
+  DocumentField copyWith({
+    String? id,
+    String? label,
+    String? value,
+    FieldType? type,
+    bool? isRequired,
+    bool? isEnabled,
+  }) {
+    return DocumentField(
+      id: id ?? this.id,
+      label: label ?? this.label,
+      value: value ?? this.value,
+      type: type ?? this.type,
+      isRequired: isRequired ?? this.isRequired,
+      isEnabled: isEnabled ?? this.isEnabled,
+    );
+  }
 }
 
 enum FieldType {

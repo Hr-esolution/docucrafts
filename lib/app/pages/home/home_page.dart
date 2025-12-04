@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/home_controller.dart';
 import 'dart:ui';
-import 'package:share_plus/share_plus.dart';
 import '../document_details_page.dart'; // Added document details page import
 
 class HomePage extends StatelessWidget {
@@ -56,7 +55,7 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Document Types Section
                 const Text(
                   'Types de Documents',
@@ -92,7 +91,8 @@ class HomePage extends StatelessWidget {
                       title: 'Carte de Visite',
                       icon: Icons.card_membership,
                       color: Colors.purple,
-                      onTap: () => controller.navigateToDocument('business_card'),
+                      onTap: () =>
+                          controller.navigateToDocument('business_card'),
                     ),
                     _buildTemplateCard(
                       title: 'CV',
@@ -192,8 +192,12 @@ class HomePage extends StatelessWidget {
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.documents.length > 4 ? 4 : controller.documents.length, // Afficher seulement les 4 premiers documents
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    itemCount: controller.documents.length > 4
+                        ? 4
+                        : controller.documents
+                            .length, // Afficher seulement les 4 premiers documents
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
@@ -499,26 +503,5 @@ class HomePage extends StatelessWidget {
 
   void _showDocumentDetails(dynamic document, BuildContext context) {
     Get.to(() => DocumentDetailsPage(document: document));
-  }
-
-  String _getDocumentTypeName(String type) {
-    switch (type) {
-      case 'invoice':
-        return 'Facture';
-      case 'quote':
-        return 'Devis';
-      case 'delivery':
-        return 'Bon de Livraison';
-      case 'business_card':
-        return 'Carte de Visite';
-      case 'cv':
-        return 'CV';
-      default:
-        return 'Document';
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 }

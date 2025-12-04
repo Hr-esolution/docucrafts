@@ -23,17 +23,19 @@ class DeliveryController extends GetxController {
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for delivery notes
     final selectedTemplate = _templateController.getSelectedTemplate();
-    
+
     if (selectedTemplate != null && selectedTemplate.category == 'delivery') {
       // Use the selected template
-      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
-        id: fieldMap['id'] ?? '',
-        label: fieldMap['label'] ?? '',
-        value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
-        type: _stringToFieldType(fieldMap['type'] ?? 'text'),
-        isRequired: fieldMap['isRequired'] ?? false,
-        isEnabled: fieldMap['isEnabled'] ?? true,
-      )).toList());
+      fields.assignAll(selectedTemplate.fields
+          .map((fieldMap) => DocumentField(
+                id: fieldMap['id'] ?? '',
+                label: fieldMap['label'] ?? '',
+                value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
+                type: _stringToFieldType(fieldMap['type'] ?? 'text'),
+                isRequired: fieldMap['isRequired'] ?? false,
+                isEnabled: fieldMap['isEnabled'] ?? true,
+              ))
+          .toList());
     } else {
       // Fallback to default fields if no template is available
       _initializeDefaultFields();
@@ -200,12 +202,13 @@ class DeliveryController extends GetxController {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
-    
+
     try {
       await _storageRepository.saveDocument(document);
       Get.snackbar('Succès', 'Bon de livraison enregistré avec succès');
     } catch (e) {
-      Get.snackbar('Erreur', 'Échec de l\'enregistrement du bon de livraison: $e');
+      Get.snackbar(
+          'Erreur', 'Échec de l\'enregistrement du bon de livraison: $e');
     }
   }
 
@@ -215,10 +218,10 @@ class DeliveryController extends GetxController {
     for (final field in fields) {
       data[field.id] = field.value;
     }
-    
+
     // Récupérer le template sélectionné
     final selectedTemplate = _templateController.getSelectedTemplate();
-    
+
     // Rediriger vers la page d'aperçu appropriée en fonction du template
     if (selectedTemplate != null && selectedTemplate.category == 'delivery') {
       switch (selectedTemplate.id) {
@@ -226,7 +229,7 @@ class DeliveryController extends GetxController {
           Get.to(() => MinimalDeliveryPreview(data: data));
           break;
         case 'delivery_multi_column':
-          Get.to(() => MultiColumnDeliveryPreview(data: data));
+          Get.to(() => MultiDeliveryPreview(data: data));
           break;
         case 'delivery_premium':
           Get.to(() => PremiumDeliveryPreview(data: data));

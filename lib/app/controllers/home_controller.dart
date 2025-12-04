@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import '../../app/repositories/storage_repository.dart';
 import '../../app/models/dynamic_document_model.dart';
-import '../../app/controllers/template_controller.dart';
 
 class HomeController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();

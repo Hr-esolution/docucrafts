@@ -25,17 +25,19 @@ class InvoiceController extends GetxController {
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for invoices
     final selectedTemplate = _templateController.getSelectedTemplate();
-    
+
     if (selectedTemplate != null && selectedTemplate.category == 'invoice') {
       // Use the selected template
-      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
-        id: fieldMap['id'] ?? '',
-        label: fieldMap['label'] ?? '',
-        value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
-        type: _stringToFieldType(fieldMap['type'] ?? 'text'),
-        isRequired: fieldMap['isRequired'] ?? false,
-        isEnabled: fieldMap['isEnabled'] ?? true,
-      )).toList());
+      fields.assignAll(selectedTemplate.fields
+          .map((fieldMap) => DocumentField(
+                id: fieldMap['id'] ?? '',
+                label: fieldMap['label'] ?? '',
+                value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
+                type: _stringToFieldType(fieldMap['type'] ?? 'text'),
+                isRequired: fieldMap['isRequired'] ?? false,
+                isEnabled: fieldMap['isEnabled'] ?? true,
+              ))
+          .toList());
     } else {
       // Fallback to default fields if no template is available
       _initializeDefaultFields();
@@ -384,10 +386,10 @@ class InvoiceController extends GetxController {
     for (final field in fields) {
       data[field.id] = field.value;
     }
-    
+
     // Récupérer le template sélectionné
     final selectedTemplate = _templateController.getSelectedTemplate();
-    
+
     // Rediriger vers la page d'aperçu appropriée en fonction du template
     if (selectedTemplate != null && selectedTemplate.category == 'invoice') {
       switch (selectedTemplate.id) {
@@ -395,7 +397,10 @@ class InvoiceController extends GetxController {
           Get.to(() => MinimalInvoicePreview(data: data));
           break;
         case 'invoice_multi_column':
-          Get.to(() => MultiColumnInvoicePreview(data: data));
+          Get.to(() => MultiInvoicePreview(
+                data: data,
+                items: [],
+              ));
           break;
         case 'invoice_premium':
           Get.to(() => PremiumInvoicePreview(data: data));

@@ -3,6 +3,8 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class MinimalBusinessCardPreview extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -45,7 +47,6 @@ class MinimalBusinessCardPreview extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 data['name'] ?? 'Nom complet',
@@ -72,7 +73,6 @@ class MinimalBusinessCardPreview extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (data['phone'] != null && data['phone'].isNotEmpty)
                     Text('📱 ${data['phone']}'),
@@ -91,7 +91,7 @@ class MinimalBusinessCardPreview extends StatelessWidget {
 
   Future<void> _printDocument(BuildContext context) async {
     final document = await _generatePdfDocument();
-    Printing.layoutPdf(
+    await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => document.save(),
     );
   }
@@ -107,14 +107,13 @@ class MinimalBusinessCardPreview extends StatelessWidget {
               width: 350,
               height: 200,
               decoration: pw.BoxDecoration(
-                border: pw.BoxBorder.all(color: PdfColors.grey),
+                border: pw.Border.all(color: PdfColors.grey),
                 borderRadius: pw.BorderRadius.circular(8),
               ),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(16),
                 child: pw.Column(
                   mainAxisAlignment: pw.MainAxisAlignment.center,
-                  crossAxisAlignment: pw.CrossAxisAlignment.center,
                   children: [
                     pw.Text(
                       data['name'] ?? 'Nom complet',
@@ -136,18 +135,18 @@ class MinimalBusinessCardPreview extends StatelessWidget {
                       data['company'] ?? 'Nom de l\'entreprise',
                       style: pw.TextStyle(
                         fontSize: 16,
-                        fontWeight: pw.FontWeight.w500,
+                        fontWeight: pw.FontWeight.normal,
                       ),
                     ),
                     pw.SizedBox(height: 16),
                     pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
                         if (data['phone'] != null && data['phone'].isNotEmpty)
                           pw.Text('📱 ${data['phone']}'),
                         if (data['email'] != null && data['email'].isNotEmpty)
                           pw.Text('✉️ ${data['email']}'),
-                        if (data['address'] != null && data['address'].isNotEmpty)
+                        if (data['address'] != null &&
+                            data['address'].isNotEmpty)
                           pw.Text('📍 ${data['address']}'),
                       ],
                     ),
@@ -166,11 +165,17 @@ class MinimalBusinessCardPreview extends StatelessWidget {
   void _shareDocument() async {
     final document = await _generatePdfDocument();
     final bytes = await document.save();
-    
-    await Share.shareWithResult(
-      bytes,
-      subject: 'Carte de visite',
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/minimal_business_card.pdf';
+    final file = File(filePath);
+
+    await file.writeAsBytes(bytes, flush: true);
+
+    await Share.shareXFiles(
+      [XFile(filePath)],
       text: 'Voici ma carte de visite',
+      subject: 'Carte de visite',
     );
   }
 }

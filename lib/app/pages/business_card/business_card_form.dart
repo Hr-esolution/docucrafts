@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pdf_customizer_app/app/controllers/business_card_controller.dart';
 import 'package:pdf_customizer_app/app/models/dynamic_document_model.dart';
-
-import '../../controllers/business_card_controller.dart';
 
 class BusinessCardForm extends StatelessWidget {
   const BusinessCardForm({super.key});

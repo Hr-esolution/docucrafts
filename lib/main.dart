@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pdf_customizer_app/app/controllers/template_controller.dart';
 import 'routes/app_pages.dart';
 
 void main() {
+  Get.put(TemplateController());
   runApp(const MyApp());
 }
 

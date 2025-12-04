@@ -3,6 +3,8 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class ProfessionalCVPreview extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -109,7 +111,8 @@ class ProfessionalCVPreview extends StatelessWidget {
                             '✉️ ${data['email']}',
                             style: const TextStyle(color: Colors.white),
                           ),
-                        if (data['address'] != null && data['address'].isNotEmpty)
+                        if (data['address'] != null &&
+                            data['address'].isNotEmpty)
                           Text(
                             '📍 ${data['address']}',
                             style: const TextStyle(color: Colors.white),
@@ -120,7 +123,7 @@ class ProfessionalCVPreview extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Experience
               const Text(
                 'Expérience professionnelle',
@@ -134,9 +137,9 @@ class ProfessionalCVPreview extends StatelessWidget {
                 Text(data['experience'])
               else
                 const Text('Aucune expérience professionnelle renseignée'),
-              
+
               const SizedBox(height: 16),
-              
+
               // Education
               const Text(
                 'Formation',
@@ -150,9 +153,9 @@ class ProfessionalCVPreview extends StatelessWidget {
                 Text(data['education'])
               else
                 const Text('Aucune formation renseignée'),
-              
+
               const SizedBox(height: 16),
-              
+
               // Skills
               const Text(
                 'Compétences',
@@ -174,9 +177,9 @@ class ProfessionalCVPreview extends StatelessWidget {
   }
 
   Future<void> _printDocument(BuildContext context) async {
-    final document = await _generatePdfDocument();
-    Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => document.save(),
+    final pdf = await _generatePdfDocument();
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
 
@@ -196,7 +199,10 @@ class ProfessionalCVPreview extends StatelessWidget {
                   padding: const pw.EdgeInsets.all(20),
                   decoration: pw.BoxDecoration(
                     gradient: pw.LinearGradient(
-                      colors: [pw.Color.fromHex('#667eea'), pw.Color.fromHex('#764ba2')],
+                      colors: [
+                        PdfColor.fromHex('#667eea'),
+                        PdfColor.fromHex('#764ba2')
+                      ],
                       begin: pw.Alignment.topLeft,
                       end: pw.Alignment.bottomRight,
                     ),
@@ -210,15 +216,12 @@ class ProfessionalCVPreview extends StatelessWidget {
                             width: 80,
                             height: 80,
                             decoration: pw.BoxDecoration(
-                              color: pw.Colors.white.withOpacity(0.2),
+                              color: PdfColors.grey300,
                               borderRadius: pw.BorderRadius.circular(8),
                             ),
                             child: pw.Center(
-                              child: pw.Icon(
-                                pw.PdfIcons.person,
-                                size: 40,
-                                color: pw.Colors.white,
-                              ),
+                              child: pw.Text("👤",
+                                  style: pw.TextStyle(fontSize: 40)),
                             ),
                           ),
                           pw.SizedBox(width: 16),
@@ -231,7 +234,7 @@ class ProfessionalCVPreview extends StatelessWidget {
                                   style: pw.TextStyle(
                                     fontSize: 24,
                                     fontWeight: pw.FontWeight.bold,
-                                    color: pw.Color.fromRGBO(255, 255, 255, 1),
+                                    color: PdfColor.fromInt(0xFFFFFFFF),
                                   ),
                                 ),
                                 pw.SizedBox(height: 4),
@@ -239,7 +242,7 @@ class ProfessionalCVPreview extends StatelessWidget {
                                   data['title'] ?? 'Poste recherché',
                                   style: pw.TextStyle(
                                     fontSize: 16,
-                                    color: pw.Color.fromRGBO(255, 255, 255, 0.7),
+                                    color: PdfColor.fromInt(0xB3FFFFFF),
                                   ),
                                 ),
                               ],
@@ -254,17 +257,21 @@ class ProfessionalCVPreview extends StatelessWidget {
                           if (data['phone'] != null && data['phone'].isNotEmpty)
                             pw.Text(
                               '📱 ${data['phone']}',
-                              style: pw.TextStyle(color: pw.Color.fromRGBO(255, 255, 255, 1)),
+                              style: pw.TextStyle(
+                                  color: PdfColor.fromInt(0xFFFFFFFF)),
                             ),
                           if (data['email'] != null && data['email'].isNotEmpty)
                             pw.Text(
                               '✉️ ${data['email']}',
-                              style: pw.TextStyle(color: pw.Color.fromRGBO(255, 255, 255, 1)),
+                              style: pw.TextStyle(
+                                  color: PdfColor.fromInt(0xFFFFFFFF)),
                             ),
-                          if (data['address'] != null && data['address'].isNotEmpty)
+                          if (data['address'] != null &&
+                              data['address'].isNotEmpty)
                             pw.Text(
                               '📍 ${data['address']}',
-                              style: pw.TextStyle(color: pw.Color.fromRGBO(255, 255, 255, 1)),
+                              style: pw.TextStyle(
+                                  color: PdfColor.fromInt(0xFFFFFFFF)),
                             ),
                         ],
                       ),
@@ -272,7 +279,7 @@ class ProfessionalCVPreview extends StatelessWidget {
                   ),
                 ),
                 pw.SizedBox(height: 24),
-                
+
                 // Experience
                 pw.Text(
                   'Expérience professionnelle',
@@ -286,9 +293,9 @@ class ProfessionalCVPreview extends StatelessWidget {
                   pw.Text(data['experience'])
                 else
                   pw.Text('Aucune expérience professionnelle renseignée'),
-                
+
                 pw.SizedBox(height: 16),
-                
+
                 // Education
                 pw.Text(
                   'Formation',
@@ -302,9 +309,9 @@ class ProfessionalCVPreview extends StatelessWidget {
                   pw.Text(data['education'])
                 else
                   pw.Text('Aucune formation renseignée'),
-                
+
                 pw.SizedBox(height: 16),
-                
+
                 // Skills
                 pw.Text(
                   'Compétences',
@@ -328,14 +335,13 @@ class ProfessionalCVPreview extends StatelessWidget {
     return pdf;
   }
 
-  void _shareDocument() async {
-    final document = await _generatePdfDocument();
-    final bytes = await document.save();
-    
-    await Share.shareWithResult(
-      bytes,
-      subject: 'Curriculum Vitae',
-      text: 'Voici mon CV',
-    );
+  Future<void> _shareDocument() async {
+    final pdf = await _generatePdfDocument();
+    final bytes = await pdf.save();
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/cv_professionnel.pdf');
+    await file.writeAsBytes(bytes);
+    await Share.shareXFiles([XFile(file.path)],
+        text: 'Voici mon CV', subject: 'Curriculum Vitae');
   }
 }

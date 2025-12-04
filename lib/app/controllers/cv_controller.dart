@@ -7,7 +7,6 @@ class CvController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
   final RxList<DocumentField> fields = <DocumentField>[].obs;
   final RxString title = "Nouveau CV".obs;
-  final TemplateController _templateController = Get.find<TemplateController>();
 
   @override
   void onInit() {
@@ -17,19 +16,22 @@ class CvController extends GetxController {
 
   void _initializeFieldsWithTemplate() {
     // Try to get the selected template for CVs
-    final TemplateController _templateController = Get.find<TemplateController>();
-    final selectedTemplate = _templateController.getSelectedTemplate();
-    
+    final TemplateController templateController =
+        Get.find<TemplateController>();
+    final selectedTemplate = templateController.getSelectedTemplate();
+
     if (selectedTemplate != null && selectedTemplate.category == 'cv') {
       // Use the selected template
-      fields.assignAll(selectedTemplate.fields.map((fieldMap) => DocumentField(
-        id: fieldMap['id'] ?? '',
-        label: fieldMap['label'] ?? '',
-        value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
-        type: _stringToFieldType(fieldMap['type'] ?? 'text'),
-        isRequired: fieldMap['isRequired'] ?? false,
-        isEnabled: fieldMap['isEnabled'] ?? true,
-      )).toList());
+      fields.assignAll(selectedTemplate.fields
+          .map((fieldMap) => DocumentField(
+                id: fieldMap['id'] ?? '',
+                label: fieldMap['label'] ?? '',
+                value: fieldMap['value'] ?? fieldMap['defaultValue'] ?? '',
+                type: _stringToFieldType(fieldMap['type'] ?? 'text'),
+                isRequired: fieldMap['isRequired'] ?? false,
+                isEnabled: fieldMap['isEnabled'] ?? true,
+              ))
+          .toList());
     } else {
       // Fallback to default fields if no template is available
       _initializeDefaultFields();

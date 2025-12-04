@@ -3,6 +3,8 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class ModernBusinessCardPreview extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -49,7 +51,6 @@ class ModernBusinessCardPreview extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 data['name'] ?? 'Nom complet',
@@ -107,7 +108,7 @@ class ModernBusinessCardPreview extends StatelessWidget {
 
   Future<void> _printDocument(BuildContext context) async {
     final document = await _generatePdfDocument();
-    Printing.layoutPdf(
+    await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => document.save(),
     );
   }
@@ -124,7 +125,10 @@ class ModernBusinessCardPreview extends StatelessWidget {
               height: 200,
               decoration: pw.BoxDecoration(
                 gradient: pw.LinearGradient(
-                  colors: [pw.Color.fromHex('#667eea'), pw.Color.fromHex('#764ba2')],
+                  colors: [
+                    PdfColor.fromHex('#667eea'),
+                    PdfColor.fromHex('#764ba2'),
+                  ],
                   begin: pw.Alignment.topLeft,
                   end: pw.Alignment.bottomRight,
                 ),
@@ -134,14 +138,13 @@ class ModernBusinessCardPreview extends StatelessWidget {
                 padding: const pw.EdgeInsets.all(16),
                 child: pw.Column(
                   mainAxisAlignment: pw.MainAxisAlignment.center,
-                  crossAxisAlignment: pw.CrossAxisAlignment.center,
                   children: [
                     pw.Text(
                       data['name'] ?? 'Nom complet',
                       style: pw.TextStyle(
                         fontSize: 20,
                         fontWeight: pw.FontWeight.bold,
-                        color: pw.Color.fromRGBO(255, 255, 255, 1),
+                        color: PdfColors.white,
                       ),
                     ),
                     pw.SizedBox(height: 4),
@@ -149,7 +152,7 @@ class ModernBusinessCardPreview extends StatelessWidget {
                       data['title'] ?? 'Titre du poste',
                       style: pw.TextStyle(
                         fontSize: 14,
-                        color: pw.Color.fromRGBO(255, 255, 255, 0.7),
+                        color: PdfColor.fromInt(0xB3FFFFFF),
                       ),
                     ),
                     pw.SizedBox(height: 16),
@@ -157,8 +160,8 @@ class ModernBusinessCardPreview extends StatelessWidget {
                       data['company'] ?? 'Nom de l\'entreprise',
                       style: pw.TextStyle(
                         fontSize: 16,
-                        fontWeight: pw.FontWeight.w500,
-                        color: pw.Color.fromRGBO(255, 255, 255, 1),
+                        fontWeight: pw.FontWeight.normal,
+                        color: PdfColors.white,
                       ),
                     ),
                     pw.SizedBox(height: 16),
@@ -167,18 +170,20 @@ class ModernBusinessCardPreview extends StatelessWidget {
                       children: [
                         if (data['phone'] != null && data['phone'].isNotEmpty)
                           pw.Padding(
-                            padding: const pw.EdgeInsets.symmetric(horizontal: 8),
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 8),
                             child: pw.Text(
                               '📱 ${data['phone']}',
-                              style: pw.TextStyle(color: pw.Color.fromRGBO(255, 255, 255, 1)),
+                              style: pw.TextStyle(color: PdfColors.white),
                             ),
                           ),
                         if (data['email'] != null && data['email'].isNotEmpty)
                           pw.Padding(
-                            padding: const pw.EdgeInsets.symmetric(horizontal: 8),
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 8),
                             child: pw.Text(
                               '✉️ ${data['email']}',
-                              style: pw.TextStyle(color: pw.Color.fromRGBO(255, 255, 255, 1)),
+                              style: pw.TextStyle(color: PdfColors.white),
                             ),
                           ),
                       ],
@@ -198,11 +203,17 @@ class ModernBusinessCardPreview extends StatelessWidget {
   void _shareDocument() async {
     final document = await _generatePdfDocument();
     final bytes = await document.save();
-    
-    await Share.shareWithResult(
-      bytes,
-      subject: 'Carte de visite',
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/modern_business_card.pdf';
+    final file = File(filePath);
+
+    await file.writeAsBytes(bytes, flush: true);
+
+    await Share.shareXFiles(
+      [XFile(filePath)],
       text: 'Voici ma carte de visite',
+      subject: 'Carte de visite',
     );
   }
 }
