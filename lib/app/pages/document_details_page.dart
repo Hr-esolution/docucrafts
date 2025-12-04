@@ -57,10 +57,30 @@ class DocumentDetailsPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _deleteDocument(controller, document),
-        backgroundColor: Colors.red,
-        child: const Icon(Icons.delete),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () => _printDocument(document),
+            backgroundColor: Colors.blue,
+            child: const Icon(Icons.print),
+            heroTag: "print",
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: () => _shareDocument(document),
+            backgroundColor: Colors.green,
+            child: const Icon(Icons.share),
+            heroTag: "share",
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: () => _deleteDocument(controller, document),
+            backgroundColor: Colors.red,
+            child: const Icon(Icons.delete),
+            heroTag: "delete",
+          ),
+        ],
       ),
     );
   }
@@ -269,6 +289,33 @@ class DocumentDetailsPage extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     return "${date.day}/${date.month}/${date.year}";
+  }
+
+  // ---------------------------------------------
+  // PRINT DOCUMENT
+  // ---------------------------------------------
+  Future<void> _printDocument(DynamicDocumentModel document) async {
+    try {
+      // For now, we'll just share the document data as text
+      // In a real implementation, this would generate and print a PDF
+      String content = '''Document: ${document.title}
+Type: ${_getDocumentTypeName(document.type)}
+Créé le: ${_formatDate(document.createdAt)}
+Modifié le: ${_formatDate(document.updatedAt)}
+
+Détails:
+''';
+
+      for (var field in document.fields) {
+        if (field.value.isNotEmpty) {
+          content += '${field.label}: ${field.value}\n';
+        }
+      }
+
+      await Share.share(content, subject: 'Document - ${document.title}');
+    } catch (e) {
+      Get.snackbar('Erreur', 'Impossible d\'imprimer le document: $e');
+    }
   }
 
   // ---------------------------------------------

@@ -82,19 +82,19 @@ abstract class AppPages {
           String documentType = Get.parameters['type'] ?? '';
           switch (documentType) {
             case 'invoice':
-              Get.offAllNamed(Routes.INVOICE);
+              Get.toNamed(Routes.INVOICE);
               break;
             case 'quote':
-              Get.offAllNamed(Routes.QUOTE);
+              Get.toNamed(Routes.QUOTE);
               break;
             case 'delivery':
-              Get.offAllNamed(Routes.DELIVERY);
+              Get.toNamed(Routes.DELIVERY);
               break;
             case 'business_card':
-              Get.offAllNamed(Routes.BUSINESS_CARD);
+              Get.toNamed(Routes.BUSINESS_CARD);
               break;
             case 'cv':
-              Get.offAllNamed(Routes.CV);
+              Get.toNamed(Routes.CV);
               break;
           }
         },

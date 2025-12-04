@@ -1,22 +1,100 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+
+void main() {
+  // Define the preview page paths to update
+  List<String> previewPages = [
+    '/workspace/lib/app/pages/quote/previews/quote_pdf_multi_preview.dart',
+    '/workspace/lib/app/pages/quote/previews/quote_pdf_premium_preview.dart',
+    '/workspace/lib/app/pages/delivery/previews/delivery_pdf_minimal_preview.dart',
+    '/workspace/lib/app/pages/delivery/previews/delivery_pdf_multi_preview.dart',
+    '/workspace/lib/app/pages/delivery/previews/delivery_pdf_premium_preview.dart',
+    '/workspace/lib/app/pages/business_card/previews/business_card_pdf_minimal_preview.dart',
+    '/workspace/lib/app/pages/business_card/previews/business_card_pdf_modern_preview.dart',
+    '/workspace/lib/app/pages/business_card/previews/business_card_pdf_professional_preview.dart',
+    '/workspace/lib/app/pages/cv/previews/cv_pdf_modern_preview.dart',
+    '/workspace/lib/app/pages/cv/previews/cv_pdf_professional_preview.dart',
+    '/workspace/lib/app/pages/cv/previews/cv_pdf_simple_preview.dart',
+  ];
+
+  for (String filePath in previewPages) {
+    if (File(filePath).existsSync()) {
+      updatePreviewPage(filePath);
+    }
+  }
+  
+  print('All preview pages have been updated!');
+}
+
+void updatePreviewPage(String filePath) {
+  String content = File(filePath).readAsStringSync();
+  
+  // Check if the file already has the required imports
+  if (content.contains('package:get/get.dart') && 
+      content.contains('DynamicDocumentModel')) {
+    print('Skipping $filePath - already updated');
+    return;
+  }
+  
+  // Determine document type from file path
+  String docType = '';
+  String controllerType = '';
+  String generateFunction = '';
+  
+  if (filePath.contains('/quote/')) {
+    docType = 'quote';
+    controllerType = 'QuoteController';
+    generateFunction = 'generateQuotePdf';
+  } else if (filePath.contains('/delivery/')) {
+    docType = 'delivery';
+    controllerType = 'DeliveryController';
+    generateFunction = 'generateDeliveryPdf';
+  } else if (filePath.contains('/business_card/')) {
+    docType = 'business_card';
+    controllerType = 'BusinessCardController';
+    generateFunction = 'generateBusinessCardPdf';
+  } else if (filePath.contains('/cv/')) {
+    docType = 'cv';
+    controllerType = 'CvController';
+    generateFunction = 'generateCvPdf';
+  } else {
+    docType = 'invoice';
+    controllerType = 'InvoiceController';
+    generateFunction = 'generateInvoicePdf';
+  }
+  
+  // Add imports
+  String newContent = content.replaceFirst(
+    'import \'package:flutter/material.dart\';',
+    '''import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdf_customizer_app/app/models/dynamic_document_model.dart';
 import 'package:pdf_customizer_app/app/repositories/storage_repository.dart';
-import 'package:pdf_customizer_app/app/controllers/invoice_controller.dart';
-
-class PremiumInvoicePreview extends StatelessWidget {
-  final Map<String, dynamic> data;
-  const PremiumInvoicePreview({super.key, required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    final InvoiceController controller = Get.find();
-    final StorageRepository storageRepository = StorageRepository();
-
-    return Scaffold(
+import 'package:pdf_customizer_app/app/controllers/${docType.contains('_') ? docType.split('_')[0] : docType}_controller.dart';'''
+  );
+  
+  // Find the class name
+  RegExp classNameRegex = RegExp(r'class\s+(\w+)\s+extends');
+  Match? classNameMatch = classNameRegex.firstMatch(newContent);
+  String className = classNameMatch?.group(1) ?? 'UnknownClass';
+  
+  // Add controller initialization
+  String controllerInit = '''
+    final ${controllerType} controller = Get.find();
+    final StorageRepository storageRepository = StorageRepository();''';
+  
+  // Replace the build method start
+  newContent = newContent.replaceFirst(
+    RegExp(r'Widget build\(BuildContext context\) \{'),
+    '''Widget build(BuildContext context) {
+    final ${controllerType} controller = Get.find();
+    final StorageRepository storageRepository = StorageRepository();'''
+  );
+  
+  // Replace the scaffold
+  String scaffoldReplacement = '''
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Aperçu Facture Premium"),
+        title: const Text("Aperçu ${_getDocumentTypeName(docType).toLowerCase()}"),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -29,9 +107,9 @@ class PremiumInvoicePreview extends StatelessWidget {
             onPressed: () async {
               // Save the document with the current data
               final document = DynamicDocumentModel(
-                id: 'invoice_${DateTime.now().millisecondsSinceEpoch}',
-                type: 'invoice',
-                title: data['invoice_title'] ?? 'Nouvelle Facture',
+                id: '${docType}_${DateTime.now().millisecondsSinceEpoch}',
+                type: '$docType',
+                title: data['${docType}_title'] ?? 'Nouveau ${_getDocumentTypeName(docType)}',
                 fields: controller.fields.toList(),
                 createdAt: DateTime.now(),
                 updatedAt: DateTime.now(),
@@ -39,15 +117,15 @@ class PremiumInvoicePreview extends StatelessWidget {
 
               try {
                 await storageRepository.saveDocument(document);
-                Get.snackbar('Succès', 'Facture enregistrée avec succès');
+                Get.snackbar('Succès', '${_getDocumentTypeName(docType)} enregistré avec succès');
               } catch (e) {
-                Get.snackbar('Erreur', 'Échec de l\'enregistrement de la facture: $e');
+                Get.snackbar('Erreur', 'Échec de l\'enregistrement du ${_getDocumentTypeName(docType).toLowerCase()}: \$e');
               }
             },
           ),
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),
-            onPressed: () => controller.generateInvoicePdf(),
+            onPressed: () => controller.$generateFunction(),
           ),
         ],
       ),
@@ -90,7 +168,7 @@ class PremiumInvoicePreview extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      data['invoice_title'] ?? 'FACTURE PREMIUM',
+                      data['${docType}_title'] ?? '${_getDocumentTypeName(docType)}',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -98,11 +176,11 @@ class PremiumInvoicePreview extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Numéro: ${data['invoice_number'] ?? ''}',
+                      'Numéro: \${data['${docType}_number'] ?? ''}',
                       style: const TextStyle(fontSize: 16),
                     ),
                     Text(
-                      'Date: ${data['issue_date'] ?? ''}',
+                      'Date: \${data['issue_date'] ?? ''}',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ],
@@ -142,10 +220,10 @@ class PremiumInvoicePreview extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text('Nom: ${data['seller_name'] ?? ''}'),
-                          Text('Adresse: ${data['seller_address'] ?? ''}'),
-                          Text('Téléphone: ${data['seller_phone'] ?? ''}'),
-                          Text('Email: ${data['seller_email'] ?? ''}'),
+                          Text('Nom: \${data['seller_name'] ?? ''}'),
+                          Text('Adresse: \${data['seller_address'] ?? ''}'),
+                          Text('Téléphone: \${data['seller_phone'] ?? ''}'),
+                          Text('Email: \${data['seller_email'] ?? ''}'),
                         ],
                       ),
                     ),
@@ -180,8 +258,8 @@ class PremiumInvoicePreview extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text('Nom: ${data['buyer_name'] ?? ''}'),
-                          Text('Adresse: ${data['buyer_address'] ?? ''}'),
+                          Text('Nom: \${data['buyer_name'] ?? ''}'),
+                          Text('Adresse: \${data['buyer_address'] ?? ''}'),
                         ],
                       ),
                     ),
@@ -223,16 +301,16 @@ class PremiumInvoicePreview extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Description: ${data['item_description'] ?? ''}'),
-                        Text('Quantité: ${data['item_quantity'] ?? ''}'),
+                        Text('Description: \${data['item_description'] ?? ''}'),
+                        Text('Quantité: \${data['item_quantity'] ?? ''}'),
                       ],
                     ),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Prix unitaire: ${data['item_unit_price'] ?? ''}'),
-                        Text('TVA: ${data['vat_rate'] ?? ''}%'),
+                        Text('Prix unitaire: \${data['item_unit_price'] ?? ''}'),
+                        Text('TVA: \${data['vat_rate'] ?? ''}%'),
                       ],
                     ),
                     const Divider(height: 20),
@@ -269,47 +347,38 @@ class PremiumInvoicePreview extends StatelessWidget {
                   ],
                 ),
               ),
-              
-              const SizedBox(height: 16),
-              
-              // Payment information
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withOpacity(0.5),
-                      Colors.white.withOpacity(0.1),
-                    ],
-                  ),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Paiement',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text('Conditions: ${data['payment_terms'] ?? ''}'),
-                    Text('Moyen: ${data['payment_method'] ?? ''}'),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
-      ),
-    );
+      ),''';
+  
+  // Replace the Scaffold content
+  RegExp scaffoldRegex = RegExp(r'body:\s*Padding\([^}]*\)');
+  newContent = newContent.replaceFirst(scaffoldRegex, scaffoldReplacement);
+  
+  // Replace the Scaffold opening
+  newContent = newContent.replaceFirst(
+    RegExp(r'Scaffold\(\s*'),
+    'Scaffold(\n      extendBodyBehindAppBar: true,\n      appBar: AppBar('
+  );
+  
+  File(filePath).writeAsStringSync(newContent);
+  print('Updated: $filePath');
+}
+
+String _getDocumentTypeName(String type) {
+  switch (type) {
+    case 'invoice':
+      return 'Facture';
+    case 'quote':
+      return 'Devis';
+    case 'delivery':
+      return 'Bon de Livraison';
+    case 'business_card':
+      return 'Carte de Visite';
+    case 'cv':
+      return 'CV';
+    default:
+      return 'Document';
   }
 }
