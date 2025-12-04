@@ -1,31 +1,54 @@
 ```
-# Dependency directories
+# Dependencies
 .dart_tool/
-.build/
-dist/
-coverage/
+.packages
+.pub/
+build/
 
-# Environment variables
+# Environment
 .env
 .env.local
-*.env.*
-
-# IDE files
-.idea/
-.vscode/
-*.swp
-*.swo
+.env.*
 
 # Logs
 *.log
-
-# Temporary files
-*.tmp
+**/logs
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Dart/Flutter specific
-**/lib/generated_plugin_registrant.dart
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Coverage
+coverage/
+*.coverage
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```
