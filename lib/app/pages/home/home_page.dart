@@ -14,8 +14,18 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('PDF Customizer'),
-        centerTitle: true,
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              width: 40,
+              height: 40,
+            ),
+            const SizedBox(width: 8),
+            const Text('DocuCrafts'),
+          ],
+        ),
+        centerTitle: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [

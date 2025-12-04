@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'PDF Customizer App',
+      title: 'DocuCrafts - PDF Customizer', // Updated title
       debugShowCheckedModeBanner: false,
       initialRoute: '/splash', // Changed to splash page
       getPages: AppPages.routes,
