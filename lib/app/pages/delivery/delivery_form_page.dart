@@ -12,7 +12,17 @@ class DeliveryFormPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Créer un Bon de Livraison'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/delivery.png',
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(width: 8),
+            const Text('Créer un Bon de Livraison'),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.visibility),

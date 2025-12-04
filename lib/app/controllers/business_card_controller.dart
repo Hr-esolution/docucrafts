@@ -46,20 +46,70 @@ class BusinessCardController extends GetxController {
           isRequired: true),
       DocumentField(
           id: 'job_title',
-          label: 'Poste',
+          label: 'Poste/Fonction',
           value: '',
           type: FieldType.text,
           isRequired: true),
       DocumentField(
-          id: 'company', label: 'Entreprise', value: '', type: FieldType.text),
+          id: 'company',
+          label: 'Entreprise',
+          value: '',
+          type: FieldType.text),
       DocumentField(
-          id: 'phone', label: 'Téléphone', value: '', type: FieldType.phone),
+          id: 'department',
+          label: 'Département',
+          value: '',
+          type: FieldType.text),
       DocumentField(
-          id: 'email', label: 'Email', value: '', type: FieldType.email),
+          id: 'phone',
+          label: 'Téléphone professionnel',
+          value: '',
+          type: FieldType.phone),
       DocumentField(
-          id: 'website', label: 'Site web', value: '', type: FieldType.text),
+          id: 'mobile_phone',
+          label: 'Téléphone mobile',
+          value: '',
+          type: FieldType.phone),
       DocumentField(
-          id: 'address', label: 'Adresse', value: '', type: FieldType.text),
+          id: 'email',
+          label: 'Email professionnel',
+          value: '',
+          type: FieldType.email),
+      DocumentField(
+          id: 'personal_email',
+          label: 'Email personnel',
+          value: '',
+          type: FieldType.email),
+      DocumentField(
+          id: 'website',
+          label: 'Site web professionnel',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'personal_website',
+          label: 'Site web personnel',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'address',
+          label: 'Adresse professionnelle',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'city',
+          label: 'Ville',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'postal_code',
+          label: 'Code postal',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'country',
+          label: 'Pays',
+          value: '',
+          type: FieldType.text),
       DocumentField(
           id: 'linkedin',
           label: 'Profil LinkedIn',
@@ -67,9 +117,29 @@ class BusinessCardController extends GetxController {
           type: FieldType.text),
       DocumentField(
           id: 'twitter',
-          label: 'Profil Twitter',
+          label: 'Profil Twitter/X',
           value: '',
           type: FieldType.text),
+      DocumentField(
+          id: 'facebook',
+          label: 'Profil Facebook',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'instagram',
+          label: 'Profil Instagram',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'skype',
+          label: 'Compte Skype',
+          value: '',
+          type: FieldType.text),
+      DocumentField(
+          id: 'whatsapp',
+          label: 'Numéro WhatsApp',
+          value: '',
+          type: FieldType.phone),
     ]);
   }
 
