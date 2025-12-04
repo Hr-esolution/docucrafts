@@ -12,7 +12,17 @@ class QuoteFormPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Créer un Devis'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/quote.png',
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(width: 8),
+            const Text('Créer un Devis'),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.visibility),

@@ -15,7 +15,17 @@ class InvoiceFormPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Créer une Facture'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/invoice.png',
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(width: 8),
+            const Text('Créer une Facture'),
+          ],
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [

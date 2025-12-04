@@ -12,7 +12,17 @@ class BusinessCardForm extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Créer une Carte de Visite'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/business_card.png',
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(width: 8),
+            const Text('Créer une Carte de Visite'),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.visibility),

@@ -34,3 +34,9 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/images/logo.png
+    - assets/images/invoice.png
+    - assets/images/quote.png
+    - assets/images/delivery.png
+    - assets/images/business_card.png
+    - assets/images/cv.png
+    - assets/templates/

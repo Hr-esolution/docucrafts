@@ -12,7 +12,17 @@ class CvFormPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Créer un CV'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/cv.png',
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(width: 8),
+            const Text('Créer un CV'),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),

@@ -285,7 +285,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     child: Icon(
-                      icon,
+                      _getDocumentIconByTitle(title),
                       size: 30,
                       color: color,
                     ),
@@ -508,6 +508,23 @@ class HomePage extends StatelessWidget {
         return Colors.teal;
       default:
         return Colors.grey;
+    }
+  }
+
+  IconData _getDocumentIconByTitle(String title) {
+    switch (title) {
+      case 'Devis':
+        return Icons.description;
+      case 'Facture':
+        return Icons.receipt;
+      case 'Bon de Livraison':
+        return Icons.local_shipping;
+      case 'Carte de Visite':
+        return Icons.card_membership;
+      case 'CV':
+        return Icons.person;
+      default:
+        return Icons.insert_drive_file;
     }
   }
 
