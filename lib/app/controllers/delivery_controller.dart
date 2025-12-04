@@ -43,6 +43,14 @@ class DeliveryController extends GetxController {
   void _initializeDefaultFields() {
     fields.assignAll([
       DocumentField(
+        id: 'company_logo',
+        label: 'Logo de l\'entreprise',
+        value: '',
+        type: FieldType.text,
+        isRequired: false,
+        isEnabled: true,
+      ),
+      DocumentField(
         id: 'delivery_number',
         label: 'Numéro du bon',
         value: '',
