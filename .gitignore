@@ -1,6 +1,81 @@
 ```
-# Documentation and generated files
-README_IMPLEMENTATION.md
-SOLUTION_SUMMARY.md
-WORKFLOW_AND_ARCHITECTURE.md
+# Flutter/Dart
+.dart_tool/
+.build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+*.iws
+*.swo
+*.swp
+*.un~
+*.class
+*.so
+*.dylib
+*.dll
+*.exe
+*.o
+*.obj
+*.out
+
+# Build
+build/
+.dart_tool/
+**/ios/Flutter/.last_build_id
+
+# Distribution
+*.tar.gz
+
+# Environment
+.env
+.env.local
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# Dependencies
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+*.lcov
+
+# Packages
+*.tar.xz
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```

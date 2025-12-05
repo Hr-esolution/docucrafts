@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdf_customizer_app/app/controllers/template_controller.dart';
-import 'routes/app_pages.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'views/home_page.dart';
+import 'views/template_selection_page.dart';
+import 'views/field_configuration_page.dart';
+import 'views/document_form_page.dart';
+import 'views/document_preview_page.dart';
+import 'views/document_history_page.dart';
 
-void main() {
-  Get.put(TemplateController());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -14,10 +19,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'DocuCrafts - PDF Customizer', // Updated title
+      title: 'DocuCrafts - PDF Document Builder',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF667eea)),
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+      ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash', // Changed to splash page
-      getPages: AppPages.routes,
+      initialRoute: '/',
+      getPages: [
+        GetPage(name: '/', page: () => const HomePage()),
+        GetPage(name: '/template-selection', page: () => const TemplateSelectionPage()),
+        GetPage(name: '/field-configuration', page: () => const FieldConfigurationPage()),
+        GetPage(name: '/document-form', page: () => const DocumentFormPage()),
+        GetPage(name: '/document-preview', page: () => const DocumentPreviewPage()),
+        GetPage(name: '/document-history', page: () => const DocumentHistoryPage()),
+      ],
+      home: const HomePage(),
     );
   }
 }
