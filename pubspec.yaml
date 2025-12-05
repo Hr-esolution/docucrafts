@@ -11,14 +11,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8
   get: ^4.6.6
+  sqflite: ^2.3.2
+  path_provider: ^2.1.3
   pdf: ^3.10.8
-  path_provider: ^2.1.1
-  sqflite: ^2.3.0
+  shared_preferences: ^2.2.2
+  uuid: ^4.4.0
+  flutter_staggered_animations: ^1.1.1
+  google_fonts: ^6.2.1
   permission_handler: ^11.0.1
   image: ^4.0.17
   path: ^1.9.1
-  shared_preferences: ^2.2.2
   share_plus: ^7.2.1
   printing: ^5.14.2
 
