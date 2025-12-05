@@ -11,6 +11,7 @@ import '../controllers/template_controller.dart';
 import '../pages/quote/previews/quote_pdf_minimal_preview.dart';
 import '../pages/quote/previews/quote_pdf_multi_preview.dart';
 import '../pages/quote/previews/quote_pdf_premium_preview.dart';
+import 'dart:math';
 
 class QuoteController extends GetxController {
   final StorageRepository _storageRepository = StorageRepository();
